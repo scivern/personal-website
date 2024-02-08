@@ -1,13 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;600;700;800;900&display=swap");
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", "sans-serif";
+    font-family: "Montserrat", "sans-serif";
 }
 
-body {
+.body {
     background-image: url("images/Final-Image-JPG.jpg");
     height: 100vh;
     background-repeat: no-repeat;
@@ -20,7 +21,7 @@ body {
     margin-top: 100px;
 }
 
-main {
+.landingPageMain {
     margin-left: 30%;
     margin-right: 30%;
     text-align: center;
@@ -35,7 +36,7 @@ main {
     left: 0;
     width: 100%;
     height: 50px;
-    padding: 20px 50px 20px 10px;
+    padding: 20px 50px 20px 15px;
     background: rgba(50, 50, 50, 0);
     display: flex;
     justify-content: space-between;
@@ -47,10 +48,10 @@ main {
     font-size: 32px;
     color: #fff;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 400;
 }
 
-.navbar a {
+.navbar a{
     position: relative;
     font-size: 18px;
     color: #fff;
@@ -59,7 +60,56 @@ main {
     margin-left: 40px;
 }
 
-.navbar a::before {
+.dropdown {
+    display: inline-block;
+    position: relative;
+    margin-left: 40px;
+}
+
+.dropbtn {
+    background-color: transparent;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: transparent;
+    /* min-width: 160px; */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: white;
+    padding: 20px 20px 5px 0px;
+    text-decoration: none;
+    display: block;
+    margin: 0;
+    /* border: 1px solid blue; */
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+/*.dropdown:hover .dropbtn {
+    background-color: transparent;
+}*/
+
+.navbar .unactivepagelink::before {
     content: '';
     position: absolute;
     top: 100%;
@@ -67,66 +117,131 @@ main {
     width: 0;
     height: 2px;
     background: #fff;
-    transition: .3s;
+    transition: .5s;
 }
 
-.navbar a:hover::before {
+.navbar button::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: .5s;
+}
+
+button:hover::before {
     width: 100%;
+}
+
+.navbar .unactivepagelink:hover::before {
+    width: 100%;
+}
+
+.navbar .activepagelink::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+}
+
+.activedropbtn {
+    background-color: transparent;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+}
+
+button.activedropbtn::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #fff;
 }
 
 a:link {
     color: inherit;
 }
 
-/*a:link {
-    color: green;
-    background-color: transparent;
-    text-decoration: none;
+h1 {
+    line-height: 130%;
 }
 
-a:visited {
-    color: pink;
-    background-color: transparent;
-    text-decoration: none;
+h2 {
+    line-height: 200%;
 }
 
-a:hover {
-    color: red;
-    background-color: transparent;
-    text-decoration: underline;
+.inlineh1 {
+    display: inline-block;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
-a:active {
-    color: yellow;
-    background-color: transparent;
-    text-decoration: underline;
-}*/
-
-
-
-/*.navbar ul{
-    list-style-type: none;
-    background-color: transparent;
-    padding: 0px;
-    margin: 0px;
-    overflow: hidden;
-    width: max-content;
+.inlineh2 {
+    display: inline-block;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
-.navbar a{
-    color: white;
-    text-decoration: none;
-    padding: 15px;
-    display: block;
-    text-align: center;
+.bodygallery {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: gray;
 }
 
-.navbar a:hover{
-    background-color: rgb(66, 66, 66);
-}
-
-.navbar li{
+/* The grid: Four equal columns that floats next to each other */
+.column {
     float: left;
+    width: 25%;
+    padding: 10px;
 }
 
-*/
+/* Style the images inside the grid */
+.column img {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.column img:hover {
+    opacity: 1;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* The expanding image container */
+.container {
+    position: relative;
+    display: none;
+}
+
+/* Expanding image text */
+#imgtext {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    color: white;
+    font-size: 20px;
+}
+
+/* Closable button inside the expanded image */
+.closebtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+}

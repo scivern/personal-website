@@ -11,28 +11,35 @@
     <script src="script.js"></script>
 </head>
 
-<body>
+<body class="body">
 
 <header class="header">
     <a href="\index.html" class="logo">George Scannell</a>
     <nav class="navbar">
-        <a href="\index.html">Home</a>
-        <a href="\media.html">Media</a>
-        <a href="\projects.html">Projects</a>
+        <a class="activepagelink" href="\index.html">Home</a>
+        <a class="unactivepagelink" href="\gallery.html">Gallery</a>
+        <div class="dropdown">
+            <button class="dropbtn">Favourites</button>
+            <div class="dropdown-content">
+                <a class="unactivepagelink" href="music.html">Music</a>
+                <a class="unactivepagelink" href="movies.html">Movies</a>
+                <a class="unactivepagelink" href="quotes.html">Quotes</a>
+            </div>
+        </div>
+        <a class="unactivepagelink" href="\media.html">Media</a>
+        <a class="unactivepagelink"  href="\projects.html">Projects</a>
     </nav>
 </header>
 
-<main>
-<h1>Physics Graduate
-<a style="color: inherit;" href="https://www.linkedin.com/in/george-scannell-744354247/"><i class="fa-brands fa-linkedin fa-1x"></i></a>
+<main class="landingPageMain">
 
+<h1 class="inlineh1">Physics Graduate</h1>
+<h1 class="inlineh1"><a target="_blank" style="color: inherit;" href="https://www.linkedin.com/in/george-scannell-744354247/"><i class="fa-brands fa-linkedin fa-1x"></i></a></h1>
 
-
-</h1>
-
-<h2><a href="files\George Scannell - CV.docx">CV/Resume</a></h2>
-<h2><a href="files\George_Scannell___BSc_Project__Double_Binary_as_a_Model_of_a_Double_Bar_(4).pdf">Dissertation</a></h2>
-<p1>Awarded the William Lassell award (2022) for achieving the highest Physics with Astronomy grade (86%) of my graduating cohort at the University of Liverpool </p1>
+<h2 class="inlineh2"><a href="files\George Scannell - CV.docx">CV/Resume</a></h2>
+<h2 class="inlineh2"><a href="files\George_Scannell___BSc_Project__Double_Binary_as_a_Model_of_a_Double_Bar_(4).pdf">Dissertation</a></h2>
+    
+<p1>Awarded the William Lassell award (2022) for achieving the highest Physics with Astronomy grade (86%) of my graduating cohort at the University of Liverpool</p1>
 
 </main>
 
