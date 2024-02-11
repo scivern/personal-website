@@ -2,3 +2,149 @@
     <a href="/index.html">Home</a>
     <a href="/pictureAlbums.html">Picture Albums</a>
 </nav>
+
+<input type="file" name="filefield" id="fileList" multiple="multiple" accept=".JSON">
+<script>
+const fileList = document.getElementById("fileList").files;
+console.log(fileList[0]);
+</script>
+
+<input type="file" onchange="readFile(this)" multiple="multiple">
+
+<form id="upload">
+    <label for="file">File to upload</label>
+    <input type="file" id="file" accept=".json", multiple="multiple">
+
+    <button>Upload</button>
+</form>
+
+
+// Get the form and file field
+let form = document.querySelector('#upload');
+let file = document.querySelector('#file');
+let combinedJson = [];
+
+// Handle submit events
+function handleSubmit(event) {
+
+    // Stop the form from reloading the page
+    event.preventDefault();
+
+    // If there's no file, do nothing
+    if (!file.value.length) return;
+
+    for (let i = 0; i < file.files.length; i++) {
+
+        // Create a new FileReader() object
+        let reader = new FileReader();
+
+        // Setup the callback event to run when the file is read
+        reader.onload = function(event) {
+            let str = event.target.result;
+            let json = JSON.parse(str);
+            combinedJson = combinedJson.concat(json);
+            console.log(combinedJson);
+        }
+
+        // Read the file
+        reader.readAsText(file.files[i]);
+        
+    }
+   
+}
+
+// Listen for submit events
+form.addEventListener('submit', handleSubmit);
+// let q = localStorage.getItem("data");
+// localStorage.removeItem("data");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+<!--function readFile(input) {
+    let combinedJson = [];
+    for (let i = 0; i < input.files.length; i++) {
+    
+        let file = input.files[i];
+
+        async function bruh() {
+            let file = input.files[i];
+            let data = (await convertToText(file));
+            return data;   
+        }
+
+        async function convertToText(input) {
+            let reader = new FileReader();
+            reader.readAsText(file);
+            await new Promise(resolve => reader.onload = () => resolve())
+            return JSON.parse(reader.result)
+    
+        }
+        bruh().then(a => { datar=a })
+        console.log(datar)
+    }
+    
+}-->
+
+
+
+<!--<input id="clickMe" type="button" value="clickme" onclick="doFunction();">
+<script>
+    function doFunction() {
+        localStorage.getItem("data")
+        console.log(data)
+    }
+</script>-->
+
+
+
+<!--function readFile(input) {
+    let file = input.files[i];
+    let reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = function () {
+        console.log(JSON.parse(reader.result),i);
+        combinedJson = combinedJson.concat(JSON.parse(reader.result));
+    };
+
+    reader.onerror = function () {
+        console.log(reader.error);
+    };     
+}-->

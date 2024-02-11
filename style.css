@@ -18,7 +18,7 @@
     background-position-y: calc(100% + 15px);
     overflow: hidden;   
     margin: 0px;
-    margin-top: 100px;
+    padding: 100px 0px 100px 0px;
 }
 
 .landingPageMain {
@@ -87,7 +87,7 @@
 /* Links inside the dropdown */
 .dropdown-content a {
     color: white;
-    padding: 20px 20px 5px 0px;
+    padding: 20px 30px 5px 0px;
     text-decoration: none;
     display: block;
     margin: 0;
@@ -193,8 +193,8 @@ h2 {
 
 .bodygallery {
     margin: 0;
-    font-family: sans-serif;
-    background-color: gray;
+    background-color: rgb(60, 60, 60);
+    padding: 50px 0px 100px 0px;
 }
 
 /* The grid: Four equal columns that floats next to each other */
@@ -206,7 +206,7 @@ h2 {
 
 /* Style the images inside the grid */
 .column img {
-    opacity: 0.8;
+    opacity: 0.7;
     cursor: pointer;
 }
 
