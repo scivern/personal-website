@@ -197,6 +197,12 @@ h2 {
     padding: 50px 0px 100px 0px;
 }
 
+.bodyprojects {
+    margin: 0;
+    background-color: rgb(60, 60, 60);
+    padding: 100px 0px 100px 0px;
+}
+
 /* The grid: Four equal columns that floats next to each other */
 .column {
     float: left;
