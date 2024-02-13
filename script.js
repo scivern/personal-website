@@ -6,23 +6,6 @@ function myFunction(imgs) {
     expandImg.parentElement.style.display = "block";
 }
 
-function dictionarySorter(dictionary) {
-
-    var keyValues = []
-
-    for (var key in dictionary) {
-        keyValues.push([key, dictionary[key]])
-    }
-    keyValues.sort(function compare(kv1, kv2) {
-        // This comparison function has 3 return cases:
-        // - Negative number: kv1 should be placed BEFORE kv2
-        // - Positive number: kv1 should be placed AFTER kv2
-        // - Zero: they are equal, any order is ok between these 2 items
-        return kv2[1] - kv1[1]
-    })
-    return keyValues;
-}
-
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
 function dataCleaner(data) {
@@ -74,10 +57,13 @@ function dataCleaner(data) {
         }
        
     }
-    // console.log(uniqueYears,uniqueMonths,uniqueTimes,uniqueArtists, uniqueSongs);
 
+    //Final sorting of sub-data
     uniqueYears = uniqueYears.sort((a, b) => a[0] - b[0]);
-    uniqueArtists =  uniqueArtists.sort ((a, b) => b[1] - a[1]);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    for (let i = 0; i < 12; i++) {uniqueMonths[i][0] = months[i];}
+    uniqueTimes[0][0] = "Midnight";
+    uniqueArtists =  uniqueArtists.sort((a, b) => b[1] - a[1]);
     uniqueSongs = uniqueSongs.sort((a, b) => b[1] - a[1]);
 
     return [uniqueYears, uniqueMonths, uniqueTimes, uniqueArtists, uniqueSongs];
@@ -100,10 +86,12 @@ function readFileAsText(file) {
 }
 
 function combineFiles(ev) {
+    
+    // stop submit button from refreshing page
     ev.preventDefault()
+    
     // let files = ev.currentTarget.files;
     let files = ev.target.uploadFile.files;
-    console.log(files)
     let readers = [];
 
     // Abort if there were no files selected
@@ -125,10 +113,7 @@ function combineFiles(ev) {
         }
 
         let cleanedData = dataCleaner(combinedJson);
-        // const dataKey = arrayColumn(cleanedData[3].slice(10, 20),0);
-        // const dataVal = arrayColumn(cleanedData[3].slice(10, 20), 1);
-        // console.log(dataKey,dataVal,cleanedData[3])
-        // let dataa = {"11": 1, "12": 3, "1": 2}; 
+    
         let myChart = document.getElementById("myChart").getContext("2d");
 
         let chart = new Chart(myChart, {
@@ -136,72 +121,13 @@ function combineFiles(ev) {
             data: {
                 labels: arrayColumn(cleanedData[3], 0).slice(0, 20),
                 datasets: [{
-                    label: "bruh",
-                    data: arrayColumn(cleanedData[3], 1).slice(0, 20)//(cleanedData[3].slice(50,55))[1]
+                    data: arrayColumn(cleanedData[3], 1).slice(0, 20)
                 }],
             },
-            options: {}
+            options: {plugins: {legend: {display: false}}}
         });
 
 
 
     });
 }
-
-
-
-
-/*function dataCleaner(data) {
-
-    let uniqueArtists = {};
-    let uniqueSongs = {};
-    let uniqueYears = {};
-    let uniqueMonths = {};
-    let uniqueTimes = {};
-
-    for (let stream in data) {
-
-        if (data[stream]["ms_played"] < 60000 || data[stream]['master_metadata_album_artist_name'] === null) {
-            continue;
-        }
-
-        if (data[stream]['ts'].slice(0, 4) in uniqueYears) {
-            uniqueYears[data[stream]['ts'].slice(0, 4)] += 1;
-        } else {
-            uniqueYears[data[stream]['ts'].slice(0, 4)] = 1;
-        }
-
-        if (data[stream]['ts'].slice(5, 7) in uniqueMonths) {
-            uniqueMonths[data[stream]['ts'].slice(5, 7)] += 1;
-        } else {
-            uniqueMonths[data[stream]['ts'].slice(5, 7)] = 1;
-        }
-
-        if (data[stream]['ts'].slice(11, 13) in uniqueTimes) {
-            uniqueTimes[data[stream]['ts'].slice(11, 13)] += 1;
-        } else {
-            uniqueTimes[data[stream]['ts'].slice(11, 13)] = 1;
-        }
-
-        if (data[stream]['master_metadata_album_artist_name'] in uniqueArtists) {
-            uniqueArtists[data[stream]['master_metadata_album_artist_name']] += 1;
-        } else {
-            uniqueArtists[data[stream]['master_metadata_album_artist_name']] = 1;
-        }
-
-        if (data[stream]['master_metadata_track_name'] in uniqueSongs) {
-            uniqueSongs[data[stream]['master_metadata_track_name']] += 1;
-        } else {
-            uniqueSongs[data[stream]['master_metadata_track_name']] = 1;
-        }
-
-    }
-
-    // uniqueYears = dictionarySorter(uniqueYears);
-    // uniqueMonths = dictionarySorter(uniqueMonths);
-    // uniqueTimes = dictionarySorter(uniqueTimes);
-    uniqueArtists = dictionarySorter(uniqueArtists);
-    uniqueSongs = dictionarySorter(uniqueSongs);
-
-    return [uniqueYears, uniqueMonths, uniqueTimes, uniqueArtists, uniqueSongs];
-}*/
