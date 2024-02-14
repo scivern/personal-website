@@ -251,3 +251,19 @@ h2 {
     font-size: 35px;
     cursor: pointer;
 }
+
+.artistsList {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    height: 300px;
+    width: 20%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.streamLengthInput {
+    position: absolute;
+    top: 100px;
+    right: 700px;
+}

@@ -6,10 +6,36 @@ function myFunction(imgs) {
     expandImg.parentElement.style.display = "block";
 }
 
+function streamLengthChange(id) {
+
+    id.preventDefault();
+    let streamLength = id.target.inputStreamLength.value;
+    // console.log(streamLength);
+    cleaningAndDisplaying(combinedJson, streamLength);
+}
+
+function cleaningAndDisplaying(combinedJson, streamLength) {
+    // streamLengthVariable = streamLengthVariable;
+    console.log(streamLength);
+    let cleanedData = dataCleaner(combinedJson, streamLength);
+    function listCreator() {
+        var result = "";
+        cleanedData[3].forEach(function (item) {
+            // console.log(item)
+            result += "<li><input type='checkbox'>" + item[0] + "</li>";
+        });
+
+        document.getElementById("artistsList").innerHTML = result;
+    }
+    listCreator();
+    chartScript(cleanedData);
+}
+
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
-function dataCleaner(data) {
+function dataCleaner(data, streamLength) {
 
+    // let streamLength = 60000;
     let uniqueArtists = [];
     let uniqueSongs = [];
     let uniqueYears = [];
@@ -21,40 +47,41 @@ function dataCleaner(data) {
                         ["12", 0], ["13", 0], ["14", 0], ["15", 0], ["16", 0], ["17", 0],
                         ["18", 0], ["19", 0], ["20", 0], ["21", 0], ["22", 0], ["23", 0]];
 
+    function cleanerTimeAndArtist(entry) {
+        return entry["ms_played"] < streamLength || entry['master_metadata_album_artist_name'] === null;}
+
+    function cleanerSlice(uniqueArray, sliceLower, sliceUpper) {
+
+        if (arrayColumn(uniqueArray, 0).includes(entry['ts'].slice(sliceLower, sliceUpper))) {
+            ++uniqueArray[arrayColumn(uniqueArray, 0).indexOf(entry['ts'].slice(sliceLower, sliceUpper))][1];
+            return uniqueArray;
+
+        } else {
+            uniqueArray.push([entry['ts'].slice(sliceLower, sliceUpper), 1]);
+            return uniqueArray;
+        }
+    }
+
+    function cleanerNoSlice(uniqueArray, param) {
+
+        if (arrayColumn(uniqueArray, 0).includes(entry[param])) {
+            ++uniqueArray[arrayColumn(uniqueArray, 0).indexOf(entry[param])][1];
+            return uniqueArray;
+
+        } else {
+            uniqueArray.push([entry[param], 1]);
+            return uniqueArray;
+        }
+    }
+
     for (entry of data) {
    
-        if (entry["ms_played"] < 60000 || entry['master_metadata_album_artist_name'] === null) {
-            continue;
-        }
-
-        if (arrayColumn(uniqueYears, 0).includes(entry['ts'].slice(0, 4))) {
-            ++uniqueYears[arrayColumn(uniqueYears, 0).indexOf(entry['ts'].slice(0, 4))][1];
-
-        } else {
-            uniqueYears.push([entry['ts'].slice(0, 4), 1]);
-        }
-        
-        if (arrayColumn(uniqueMonths, 0).includes(entry['ts'].slice(5, 7))) {
-            ++uniqueMonths[arrayColumn(uniqueMonths, 0).indexOf(entry['ts'].slice(5, 7))][1];
-        } 
-
-        if (arrayColumn(uniqueTimes, 0).includes(entry['ts'].slice(11, 13))) {
-            ++uniqueTimes[arrayColumn(uniqueTimes, 0).indexOf(entry['ts'].slice(11, 13))][1];
-        } 
-        
-        if (arrayColumn(uniqueArtists, 0).includes(entry['master_metadata_album_artist_name'])) {
-            ++uniqueArtists[arrayColumn(uniqueArtists, 0).indexOf(entry['master_metadata_album_artist_name'])][1];
-
-        } else {
-            uniqueArtists.push([entry['master_metadata_album_artist_name'], 1]);
-        }
-
-        if (arrayColumn(uniqueSongs, 0).includes(entry['master_metadata_track_name'])) {
-            ++uniqueSongs[arrayColumn(uniqueSongs, 0).indexOf(entry['master_metadata_track_name'])][1];
-
-        } else {
-            uniqueSongs.push([entry['master_metadata_track_name'], 1]);
-        }
+        if (cleanerTimeAndArtist(entry)) {continue;}
+        uniqueYears = cleanerSlice(uniqueYears, 0, 4);
+        uniqueMonths = cleanerSlice(uniqueMonths, 5, 7);
+        uniqueTimes = cleanerSlice(uniqueTimes, 11, 13);
+        uniqueArtists = cleanerNoSlice(uniqueArtists, 'master_metadata_album_artist_name');
+        uniqueSongs = cleanerNoSlice(uniqueSongs, 'master_metadata_track_name');
        
     }
 
@@ -89,7 +116,7 @@ function combineFiles(ev) {
     
     // stop submit button from refreshing page
     ev.preventDefault()
-    
+    // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
     // let files = ev.currentTarget.files;
     let files = ev.target.uploadFile.files;
     let readers = [];
@@ -111,23 +138,36 @@ function combineFiles(ev) {
         for (let i = 0; i < values.length; i++) {
             combinedJson = combinedJson.concat(values[i])
         }
-
-        let cleanedData = dataCleaner(combinedJson);
-    
-        let myChart = document.getElementById("myChart").getContext("2d");
-
-        let chart = new Chart(myChart, {
-            type: "bar",
-            data: {
-                labels: arrayColumn(cleanedData[3], 0).slice(0, 20),
-                datasets: [{
-                    data: arrayColumn(cleanedData[3], 1).slice(0, 20)
-                }],
-            },
-            options: {plugins: {legend: {display: false}}}
-        });
-
-
-
+        console.log("Files Uploaded and Combined");
+        let streamLength = 60000;
+        cleaningAndDisplaying(combinedJson, streamLength);
+        
+        
+        
     });
 }
+
+function chartScript (cleanedData) {
+    const chartExist = Chart.getChart("myChart"); // <canvas> id
+    if (chartExist != undefined)
+        chartExist.destroy(); 
+    // if (typeof chart == 'undefined') { console.log("d") }
+    let myChart = document.getElementById("myChart").getContext("2d");
+    // if (typeof chart === 'undefined') {console.log("d")}
+    // if (typeof poo === 'undefined') {console.log("D")}
+    
+    let chart = new Chart(myChart, {
+        type: "bar",
+        data: {
+            labels: arrayColumn(cleanedData[3], 0).slice(0, 20),
+            datasets: [{
+                data: arrayColumn(cleanedData[3], 1).slice(0, 20)
+            }],
+        },
+        options: { plugins: { legend: { display: false } } }
+    });
+    // chart.destroy()
+    
+    
+}
+
