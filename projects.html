@@ -43,19 +43,25 @@
     <button onclick="streamLengthChange('streamLength')" id="streamLengthSubmit">Submit</button>
 </form>-->
 
-<form class="streamLengthInput">
-    <input type="text" id="streamLength" name="inputStreamLength" value="" />
-    <input type="submit" value="Submit" />
+<form class="streamLengthAndArtistExclude">
+    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" />
+    <input class = "streamLengthInput" type="submit" value="Submit" />
 </form>
 
-<ol class="artistsList" id="artistsList"></ol>
+<form class="artistCheckbox">
+    <ol class="artistsList" id="artistsList"></ol>
+    <input type="submit" value="Submit" />
+</form>
 
 <div style="width: 800px;"><canvas id="myChart"></canvas></div>
 
 <script>
-    let a = 5;
-    const streamLengthUpload = document.querySelector('.streamLengthInput')
-    streamLengthUpload.addEventListener('submit', streamLengthChange, false)
+
+const artistCheckbox = document.querySelector('.artistCheckbox');
+artistCheckbox.addEventListener('submit', artistCheckboxExtractor, false)
+
+const streamLengthUpload = document.querySelector('.streamLengthAndArtistExclude')
+streamLengthUpload.addEventListener('submit', streamLengthChange, false)
 // Handle multiple fileuploads
 const uploadForm = document.querySelector('.upload');
 uploadForm.addEventListener('submit', combineFiles, false);//can be true or false not sure has no effect atm

@@ -9,33 +9,41 @@ function myFunction(imgs) {
 function streamLengthChange(id) {
 
     id.preventDefault();
-    let streamLength = id.target.inputStreamLength.value;
+    let streamLengthValue = id.target.inputStreamLength.value;
     // console.log(streamLength);
-    cleaningAndDisplaying(combinedJson, streamLength);
+    cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
 }
 
-function cleaningAndDisplaying(combinedJson, streamLength) {
-    // streamLengthVariable = streamLengthVariable;
-    console.log(streamLength);
-    let cleanedData = dataCleaner(combinedJson, streamLength);
-    function listCreator() {
-        var result = "";
-        cleanedData[3].forEach(function (item) {
-            // console.log(item)
-            result += "<li><input type='checkbox'>" + item[0] + "</li>";
-        });
-
-        document.getElementById("artistsList").innerHTML = result;
+function artistCheckboxExtractor(values) {
+    values.preventDefault();
+    artists = values.target;
+    checkedArtists = [];
+    for (artist of artists) {
+        if (artist.checked == true) { checkedArtists.push(artist.value) }
     }
-    listCreator();
+    console.log(checkedArtists);
+    streamLengthValue=60000;
+    // console.log(streamLengthValue)
+    cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
+}
+
+function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) {
+    // streamLengthVariable = streamLengthVariable;
+    // console.log(streamLength);
+    
+    // console.log(uniqueArtistsCheckbox);
+
+    let cleanedData = dataCleaner(combinedJson, streamLengthValue, checkedArtists);
+   
     chartScript(cleanedData);
 }
 
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
-function dataCleaner(data, streamLength) {
+function dataCleaner(data, streamLengthValue, checkedArtists) {
 
     // let streamLength = 60000;
+    console.log(streamLengthValue);
     let uniqueArtists = [];
     let uniqueSongs = [];
     let uniqueYears = [];
@@ -48,7 +56,7 @@ function dataCleaner(data, streamLength) {
                         ["18", 0], ["19", 0], ["20", 0], ["21", 0], ["22", 0], ["23", 0]];
 
     function cleanerTimeAndArtist(entry) {
-        return entry["ms_played"] < streamLength || entry['master_metadata_album_artist_name'] === null;}
+        return entry["ms_played"] < streamLengthValue || entry['master_metadata_album_artist_name'] === null || checkedArtists.includes(entry['master_metadata_album_artist_name']);}
 
     function cleanerSlice(uniqueArray, sliceLower, sliceUpper) {
 
@@ -139,10 +147,24 @@ function combineFiles(ev) {
             combinedJson = combinedJson.concat(values[i])
         }
         console.log("Files Uploaded and Combined");
-        let streamLength = 60000;
-        cleaningAndDisplaying(combinedJson, streamLength);
         
-        
+        uniqueArtistsCheckbox = [];
+        for (entry of combinedJson) {
+            if (!uniqueArtistsCheckbox.includes(entry['master_metadata_album_artist_name'])) {
+                uniqueArtistsCheckbox.push(entry['master_metadata_album_artist_name']);
+            }
+        }
+        uniqueArtistsCheckbox.sort(Intl.Collator().compare);
+
+        let result = "";
+        uniqueArtistsCheckbox.forEach(function (item) {
+            result += "<li><input type='checkbox' value='"+item+"'>" + item + "</li>";
+        })
+        document.getElementById("artistsList").innerHTML = result;
+
+        let streamLengthValue = 60000;
+        let checkedArtists = [];
+        cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
         
     });
 }
