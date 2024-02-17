@@ -6,7 +6,7 @@ function myFunction(imgs) {
     expandImg.parentElement.style.display = "block";
 }
 
-function streamLengthChange(id) {
+/*function streamLengthChange(id) {
 
     id.preventDefault();
     let streamLengthValue = id.target.inputStreamLength.value;
@@ -19,12 +19,30 @@ function artistCheckboxExtractor(values) {
     artists = values.target;
     checkedArtists = [];
     for (artist of artists) {
-        if (artist.checked == true) { checkedArtists.push(artist.value) }
+        if (artist.checked == true) {checkedArtists.push(artist.value)}
     }
     console.log(checkedArtists);
+    console.log(streamLengthValue)
     streamLengthValue=60000;
     // console.log(streamLengthValue)
     cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
+}*/
+
+function streamLengthAndArtistsExtractor(values){
+    values.preventDefault();
+
+    let streamLengthValue = values.target[0].value;
+    
+    artists = values.target;
+    checkedArtists = [];
+    for (artist of artists) {
+        if (artist.checked == true) { checkedArtists.push(artist.value) }
+    }
+  
+    // console.log(checkedArtists);
+    // console.log(streamLengthValue);
+
+    cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists)
 }
 
 function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) {
@@ -43,7 +61,7 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
 function dataCleaner(data, streamLengthValue, checkedArtists) {
 
     // let streamLength = 60000;
-    console.log(streamLengthValue);
+    // console.log(streamLengthValue, checkedArtists);
     let uniqueArtists = [];
     let uniqueSongs = [];
     let uniqueYears = [];
@@ -158,7 +176,7 @@ function combineFiles(ev) {
 
         let result = "";
         uniqueArtistsCheckbox.forEach(function (item) {
-            result += "<li><input type='checkbox' value='"+item+"'>" + item + "</li>";
+            result += "<li><input type='checkbox' id="+item+" value='"+item+"'>" + item + "</li>";
         })
         document.getElementById("artistsList").innerHTML = result;
 
@@ -167,6 +185,29 @@ function combineFiles(ev) {
         cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
         
     });
+}
+
+function artistListSearch() {
+    // Declare variables
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById('search');
+    filter = input.value.toUpperCase();
+    ol = document.getElementById("artistsList");
+    li = ol.getElementsByTagName('li');
+    // console.log(ol,li)
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("input")[0];
+        // console.log(a.value)
+        txtValue = a.value//a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+            // console.log(txtValue)
+        }
+    }
 }
 
 function chartScript (cleanedData) {

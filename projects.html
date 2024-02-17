@@ -29,7 +29,7 @@
     </nav>
 </header>
 
-<!-- Spotify history thing, spotify ticketmaster, tiktok satisfying thing  -->
+<!-- Spotify history thing, spotify ticketmaster, tiktok satisfying thing, DISSERTATION code  -->
 
 <main>
 
@@ -38,34 +38,31 @@
     <input type="submit" value="Submit" />
 </form>
 
-<!--<form class="streamLengthInput">
-    <input type="text" id="streamLength" value="" />
-    <button onclick="streamLengthChange('streamLength')" id="streamLengthSubmit">Submit</button>
-</form>-->
-
-<form class="streamLengthAndArtistExclude">
-    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" />
-    <input class = "streamLengthInput" type="submit" value="Submit" />
-</form>
-
-<form class="artistCheckbox">
+<form class="streamLengthAndArtistsExclude" id="streamLengthAndArtistsExclude">
+    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="60000" id="artistSearch" />
+    <input type="text" placeholder="Search" id="search"/>
     <ol class="artistsList" id="artistsList"></ol>
-    <input type="submit" value="Submit" />
+    <input class="streamLengthInput" type="submit" value="Submit" />
 </form>
 
 <div style="width: 800px;"><canvas id="myChart"></canvas></div>
 
 <script>
 
-const artistCheckbox = document.querySelector('.artistCheckbox');
-artistCheckbox.addEventListener('submit', artistCheckboxExtractor, false)
+// const filterForm = document.querySelector('#search')
+document.getElementById('search').addEventListener('keyup', artistListSearch, false)
 
-const streamLengthUpload = document.querySelector('.streamLengthAndArtistExclude')
-streamLengthUpload.addEventListener('submit', streamLengthChange, false)
+const streamLengthAndArtistExcludeForm = document.querySelector('.streamLengthAndArtistsExclude');
+streamLengthAndArtistExcludeForm.addEventListener('submit', streamLengthAndArtistsExtractor, false);
+
 // Handle multiple fileuploads
 const uploadForm = document.querySelector('.upload');
 uploadForm.addEventListener('submit', combineFiles, false);//can be true or false not sure has no effect atm
 
+// const search = document.getElementById("search");
+// const labels = document.querySelectorAll("#streamLengthAndArtistsExclude > label");
+
+// search.addEventListener("input", () => Array.from(labels).forEach((element) => element.style.display = element.childNodes[1].id.toLowerCase().includes(search.value.toLowerCase()) ? "inline" : "none"))
 
 
 </script>
