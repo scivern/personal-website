@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width", initial-scale="1.0">
     <title>George Scannell's Personal Website</title>
     <link href="style.css" rel="stylesheet">
+    <script src="spotifyStreamData.js"></script>
     <script src="https://kit.fontawesome.com/ddfda15c1c.js" crossorigin="anonymous"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
 </head>
 
 <body class="grey-body">
 
-<header>
+<header class="nav-bottom-line">
     <nav class="standard-nav">
         <ul class="menu">
             <li class="logo"><a href="index.html">George Scannell</a></li>
@@ -33,21 +34,29 @@
 
 <!-- Spotify history thing, spotify ticketmaster, tiktok satisfying thing, DISSERTATION code  -->
 
-<main class="mainProjects">
+<main class="main-spotify-stream-data">
+
 
 <form class="upload">
     <input type="file" name="uploadFile" value="Select your JSON files" multiple />
     <input type="submit" value="Submit" />
+    <p1>Submit all of your JSON files</p1>
 </form>
+
+<canvas class="stream-graphs" id="artists-chart"></canvas></div>
+<canvas class="stream-graphs" id="songs-chart"></canvas></div>
+<canvas class="stream-graphs" id="years-chart"></canvas></div>
+<canvas class="stream-graphs" id="months-chart"></canvas></div>
+<canvas class="stream-graphs" id="times-chart"></canvas></div>
 
 <form class="streamLengthAndArtistsExclude" id="streamLengthAndArtistsExclude">
-    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="60000" id="artistSearch" />
-    <input type="text" placeholder="Search" id="search"/>
-    <ol class="artistsList" id="artistsList"></ol>
+    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="Stream length: 60000ms" id="artistSearch" />
+    <input class="artist-search-box" type="text" placeholder="Search for Artist" id="search"/>
     <input class="streamLengthInput" type="submit" value="Submit" />
+    <ol class="artistsList" id="artistsList"></ol>
 </form>
 
-<div style="width: 800px;"><canvas id="myChart"></canvas></div>
+
 
 <script>
 
@@ -60,11 +69,6 @@ streamLengthAndArtistExcludeForm.addEventListener('submit', streamLengthAndArtis
 // Handle multiple fileuploads
 const uploadForm = document.querySelector('.upload');
 uploadForm.addEventListener('submit', combineFiles, false);//can be true or false not sure has no effect atm
-
-// const search = document.getElementById("search");
-// const labels = document.querySelectorAll("#streamLengthAndArtistsExclude > label");
-
-// search.addEventListener("input", () => Array.from(labels).forEach((element) => element.style.display = element.childNodes[1].id.toLowerCase().includes(search.value.toLowerCase()) ? "inline" : "none"))
 
 
 </script>
