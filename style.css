@@ -24,6 +24,8 @@ body {
 
 .grey-body {
     background-color: rgb(60, 60, 60);
+    min-height: 100%;
+    /* overflow: auto; */
 }
 
 .nav-bottom-line {
@@ -31,9 +33,9 @@ body {
     background-image: url(images/Final-Image-JPG.jpg);
 }
 
-/* .main-spotify-stream-data {
-    margin-top: 2rem;
-} */
+.main-spotify-stream-data {
+    margin: 1rem;
+}
 
 .standard-nav {
     background: transparent; /*#222;*/
@@ -167,6 +169,13 @@ a.active-nav-link{
     font-size: 3rem;
 }
 
+
+
+.upload p1 {
+    display: block;
+    padding: 1rem;
+}
+
 .artistsList {
     position: relative;
     /* right: 100px; */
@@ -201,8 +210,9 @@ a.active-nav-link{
 
 .stream-graphs {
     /* position: relative; */
-    width: 100%;
+    width: 99%;
     padding: 1rem;
+    display: none;
 }
 
 

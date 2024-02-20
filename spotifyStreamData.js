@@ -26,6 +26,7 @@ function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) 
 
     chartScript(cleanedData);
     streamLengthAndArtistExcludeForm.style.display = 'block';
+
 }
 
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
@@ -151,7 +152,7 @@ function combineFiles(ev) {
 
         let result = "";
         uniqueArtistsCheckbox.forEach(function (item) {
-            result += "<li><input style='margin-right: 0.3rem;' type='checkbox' id=" + item + " value='" + item + "'>" + item + "</li>";
+            result += "<li><input style='margin-right: 0.3rem;' type='checkbox' id='" + item + "' value='" + item + "'>" + item + "</li>";
         })
         document.getElementById("artistsList").innerHTML = result;
 
@@ -193,7 +194,7 @@ function chartScript(cleanedData) {
             chartExist.destroy();
       
         let myChart = document.getElementById(chartIds[i]).getContext("2d");
-        
+    
 
         let chart = new Chart(myChart, {
             type: "bar",
@@ -205,7 +206,7 @@ function chartScript(cleanedData) {
             },
             options: { indexAxis: 'y', responsive: 'true', plugins: { legend: { display: false } } }
         });
-    console.log(i)
+        document.querySelector("#"+chartIds[i]).style.display = 'block';
     }
 
 }
