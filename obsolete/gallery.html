@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" , initial-scale="1.0">
+    <title>George Scannell's Personal Website</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="bodygallery">
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="navLogo">George Scannell</a>
+            <ul class="navMenu">
+                <li class="navItem">
+                    <a href="gallery.html" class="navLink activeNavLink">Gallery</a>
+                </li>
+                <li class="navItem">
+                    <a href="media.html" class="navLink">Media</a>
+                </li>
+                <li class="navItem">
+                    <a href="projects.html" class="navLink">Projects</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+<!-- The four columns -->
+<div class="row">
+    <div class="column">
+        <img src="images/Final Image.jpg" alt="M13 - Hercules Cluster (Globular)" style="width:100%" onclick="myFunction(this);">
+    </div>
+    <div class="column">
+        <img src="images/IMG_5657.jpg" alt="The Moon" style="width:100%" onclick="myFunction(this);">
+    </div>
+    <div class="column">
+        <img src="images/IMG_6916.jpg" alt="The Milky Way" style="width:100%" onclick="myFunction(this);">
+    </div>
+    <div class="column">
+        <img src="images/jupe-4.jpg" alt="Jupiter and its Moons" style="width:100%" onclick="myFunction(this);">
+    </div>
+</div>
+
+<div class="container">
+    <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+    <img id="expandedImg" style="width:100%">
+    <div id="imgtext"></div>
+</div>
+
+
+
+</body>
+
+<script src="script.js"></script>
+
+</html>

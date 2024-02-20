@@ -1,65 +1,62 @@
-const toggle = document.querySelector(".toggle");
-const menu = document.querySelector(".menu");
-const items = document.querySelectorAll(".item");
+const hamburger = document.querySelector(".hamburger");
+const navMenu = document.querySelector(".navMenu");
+const navLink = document.querySelectorAll(".navLink");
 
-/* Toggle mobile menu */
-function toggleMenu() {
-    if (menu.classList.contains("active")) {
-        menu.classList.remove("active");
-        toggle.querySelector("a").innerHTML = "<i class='fas fa-bars'></i>";
-    } else {
-        menu.classList.add("active");
-        toggle.querySelector("a").innerHTML = "<i class='fas fa-times'></i>";
-    }
+hamburger.addEventListener("click", mobileMenu);
+navLink.forEach(n => n.addEventListener("click", closeMenu));
+
+function mobileMenu() {
+    hamburger.classList.toggle("active");
+    navMenu.classList.toggle("active");
 }
 
-/* Activate Submenu */
-function toggleItem() {
-    if (this.classList.contains("submenu-active")) {
-        this.classList.remove("submenu-active");
-    } else if (menu.querySelector(".submenu-active")) {
-        menu.querySelector(".submenu-active").classList.remove("submenu-active");
-        this.classList.add("submenu-active");
-    } else {
-        this.classList.add("submenu-active");
-    }
+function closeMenu() {
+    hamburger.classList.remove("active");
+    navMenu.classList.remove("active");
 }
 
-/* Close Submenu From Anywhere */
-function closeSubmenu(e) {
-    if (menu.querySelector(".submenu-active")) {
-        let isClickInside = menu
-            .querySelector(".submenu-active")
-            .contains(e.target);
 
-        if (!isClickInside && menu.querySelector(".submenu-active")) {
-            menu.querySelector(".submenu-active").classList.remove("submenu-active");
-        }
-    }
+function myFunction(imgs) {
+    var expandImg = document.getElementById("expandedImg");
+    var imgText = document.getElementById("imgtext");
+    expandImg.src = imgs.src;
+    imgText.innerHTML = imgs.alt;
+    expandImg.parentElement.style.display = "block";
 }
-/* Event Listeners */
-toggle.addEventListener("click", toggleMenu, false);
-for (let item of items) {
-    if (item.querySelector(".submenu")) {
-        item.addEventListener("click", toggleItem, false);
-    }
-    item.addEventListener("keypress", toggleItem, false);
+
+/*function streamLengthChange(id) {
+
+    id.preventDefault();
+    let streamLengthValue = id.target.inputStreamLength.value;
+    // console.log(streamLength);
+    cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
 }
-document.addEventListener("click", closeSubmenu, false);
 
+function artistCheckboxExtractor(values) {
+    values.preventDefault();
+    artists = values.target;
+    checkedArtists = [];
+    for (artist of artists) {
+        if (artist.checked == true) {checkedArtists.push(artist.value)}
+    }
+    console.log(checkedArtists);
+    console.log(streamLengthValue)
+    streamLengthValue=60000;
+    // console.log(streamLengthValue)
+    cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
+}*/
 
-
-function streamLengthAndArtistsExtractor(values) {
+function streamLengthAndArtistsExtractor(values){
     values.preventDefault();
 
     let streamLengthValue = values.target[0].value;
-
+    
     artists = values.target;
     checkedArtists = [];
     for (artist of artists) {
         if (artist.checked == true) { checkedArtists.push(artist.value) }
     }
-
+  
     // console.log(checkedArtists);
     // console.log(streamLengthValue);
 
@@ -69,11 +66,11 @@ function streamLengthAndArtistsExtractor(values) {
 function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) {
     // streamLengthVariable = streamLengthVariable;
     // console.log(streamLength);
-
+    
     // console.log(uniqueArtistsCheckbox);
 
     let cleanedData = dataCleaner(combinedJson, streamLengthValue, checkedArtists);
-
+   
     chartScript(cleanedData);
 }
 
@@ -87,16 +84,15 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
     let uniqueSongs = [];
     let uniqueYears = [];
     let uniqueMonths = [["01", 0], ["02", 0], ["03", 0], ["04", 0], ["05", 0], ["06", 0],
-    ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0], ["12", 0]];
-
+                        ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0], ["12", 0]];
+    
     let uniqueTimes = [["00", 0], ["01", 0], ["02", 0], ["03", 0], ["04", 0], ["05", 0],
-    ["06", 0], ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0],
-    ["12", 0], ["13", 0], ["14", 0], ["15", 0], ["16", 0], ["17", 0],
-    ["18", 0], ["19", 0], ["20", 0], ["21", 0], ["22", 0], ["23", 0]];
+                        ["06", 0], ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0],
+                        ["12", 0], ["13", 0], ["14", 0], ["15", 0], ["16", 0], ["17", 0],
+                        ["18", 0], ["19", 0], ["20", 0], ["21", 0], ["22", 0], ["23", 0]];
 
     function cleanerTimeAndArtist(entry) {
-        return entry["ms_played"] < streamLengthValue || entry['master_metadata_album_artist_name'] === null || checkedArtists.includes(entry['master_metadata_album_artist_name']);
-    }
+        return entry["ms_played"] < streamLengthValue || entry['master_metadata_album_artist_name'] === null || checkedArtists.includes(entry['master_metadata_album_artist_name']);}
 
     function cleanerSlice(uniqueArray, sliceLower, sliceUpper) {
 
@@ -123,22 +119,22 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
     }
 
     for (entry of data) {
-
-        if (cleanerTimeAndArtist(entry)) { continue; }
+   
+        if (cleanerTimeAndArtist(entry)) {continue;}
         uniqueYears = cleanerSlice(uniqueYears, 0, 4);
         uniqueMonths = cleanerSlice(uniqueMonths, 5, 7);
         uniqueTimes = cleanerSlice(uniqueTimes, 11, 13);
         uniqueArtists = cleanerNoSlice(uniqueArtists, 'master_metadata_album_artist_name');
         uniqueSongs = cleanerNoSlice(uniqueSongs, 'master_metadata_track_name');
-
+       
     }
 
     //Final sorting of sub-data
     uniqueYears = uniqueYears.sort((a, b) => a[0] - b[0]);
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    for (let i = 0; i < 12; i++) { uniqueMonths[i][0] = months[i]; }
+    for (let i = 0; i < 12; i++) {uniqueMonths[i][0] = months[i];}
     uniqueTimes[0][0] = "Midnight";
-    uniqueArtists = uniqueArtists.sort((a, b) => b[1] - a[1]);
+    uniqueArtists =  uniqueArtists.sort((a, b) => b[1] - a[1]);
     uniqueSongs = uniqueSongs.sort((a, b) => b[1] - a[1]);
 
     return [uniqueYears, uniqueMonths, uniqueTimes, uniqueArtists, uniqueSongs];
@@ -161,7 +157,7 @@ function readFileAsText(file) {
 }
 
 function combineFiles(ev) {
-
+    
     // stop submit button from refreshing page
     ev.preventDefault()
     // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
@@ -187,7 +183,7 @@ function combineFiles(ev) {
             combinedJson = combinedJson.concat(values[i])
         }
         console.log("Files Uploaded and Combined");
-
+        
         uniqueArtistsCheckbox = [];
         for (entry of combinedJson) {
             if (!uniqueArtistsCheckbox.includes(entry['master_metadata_album_artist_name'])) {
@@ -198,14 +194,14 @@ function combineFiles(ev) {
 
         let result = "";
         uniqueArtistsCheckbox.forEach(function (item) {
-            result += "<li><input type='checkbox' id=" + item + " value='" + item + "'>" + item + "</li>";
+            result += "<li><input type='checkbox' id="+item+" value='"+item+"'>" + item + "</li>";
         })
         document.getElementById("artistsList").innerHTML = result;
 
         let streamLengthValue = 60000;
         let checkedArtists = [];
         cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
-
+        
     });
 }
 
@@ -232,15 +228,15 @@ function artistListSearch() {
     }
 }
 
-function chartScript(cleanedData) {
+function chartScript (cleanedData) {
     const chartExist = Chart.getChart("myChart"); // <canvas> id
     if (chartExist != undefined)
-        chartExist.destroy();
+        chartExist.destroy(); 
     // if (typeof chart == 'undefined') { console.log("d") }
     let myChart = document.getElementById("myChart").getContext("2d");
     // if (typeof chart === 'undefined') {console.log("d")}
     // if (typeof poo === 'undefined') {console.log("D")}
-
+    
     let chart = new Chart(myChart, {
         type: "bar",
         data: {
@@ -252,6 +248,7 @@ function chartScript(cleanedData) {
         options: { plugins: { legend: { display: false } } }
     });
     // chart.destroy()
-
-
+    
+    
 }
+
