@@ -2,7 +2,7 @@
 function streamLengthAndArtistsExtractor(values) {
     values.preventDefault();
 
-    let streamLengthValue = values.target[0].value;
+    let streamLengthValue = values.target[0].value*1000;
 
     artists = values.target;
     checkedArtists = [];
@@ -26,6 +26,7 @@ function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) 
 
     chartScript(cleanedData);
     streamLengthAndArtistExcludeForm.style.display = 'block';
+    document.querySelector('.chart-selector-buttons').style.display = 'block';
 
 }
 
@@ -156,7 +157,7 @@ function combineFiles(ev) {
         })
         document.getElementById("artistsList").innerHTML = result;
 
-        let streamLengthValue = 60000;
+        let streamLengthValue = 30000;
         let checkedArtists = [];
         cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
 
@@ -204,9 +205,48 @@ function chartScript(cleanedData) {
                     data: arrayColumn(cleanedData[i], 1).slice(0, 30)
                 }],
             },
-            options: { indexAxis: 'y', responsive: 'true', plugins: { legend: { display: false } } }
+            options: {
+                indexAxis: 'y',
+                responsive: 'true',
+                scales: {
+                    x: {
+                        title: {
+                            display: 'true',
+                            text: 'Number of Streams',
+                            color: 'white'
+                        },
+                        ticks: {
+                            color: 'white'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: 'true',
+                            text: chartIds[i].slice(0,-6).toUpperCase(),
+                            color: 'white'
+                        },
+                        ticks: {
+                            color: 'white'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text:chartIds[i].toUpperCase(),
+                        color: 'white'
+                    },
+                    legend: {
+                        display: false,
+                    }
+                }
+            }
         });
-        document.querySelector("#"+chartIds[i]).style.display = 'block';
-    }
 
+        if (i != 0){
+            document.querySelector("#" + chartIds[i]).style.display = 'none';
+        }
+        // document.querySelector("#"+chartIds[i]).style.display = 'none';
+    }
+    // document.querySelector("#artists-chart").style.display = 'block';
 }

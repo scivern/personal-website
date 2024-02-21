@@ -40,23 +40,44 @@
 <form class="upload">
     <input type="file" name="uploadFile" value="Select your JSON files" multiple />
     <input type="submit" value="Submit" />
-    <p1>Use the browse function above to submit all of your JSON files provided by spotify. 
+    <p1>Use the browse function above to submit all of your JSON files provided by Spotify. 
         Extract the .zip file "my_spotify_data" and the files should be within the enclosed "MyData" folder.
         Select all files which follow the naming format "endsong_(X)"
-        i.e. endsong_0, endsong_1, endsong_2 etc. Do NOT select the "endvideo" file. </p1>
+        i.e. endsong_0, endsong_1, endsong_2 etc. Do NOT select the "endvideo" file.</p1>
+    <p1>The data provided by Spotify contains all streams irrespective of time listened.
+        This means that, for example, songs that were skipped through whilst a preferable one was being
+        looked for are still captured in the data.
+        This could negatively skew the results, and so by default all streams which are less than 30 seconds are ignored.
+        This threshold can be adjusted with the input box at the bottom of the following results page.</p1>
+    <p1>Some of your data may contain certain artists which you do not want to see.
+        In my case, many of my highest streams were from artists which produced ambient noises
+        to help me sleep i.e. thunderstorm, rainforest, ocean sounds and so they did not reflect
+        my general music listening habits. A list and search filter is provided whereby you can
+        search for the artists that you don't want to be in the data and exclude them by ticking their
+        checkbox.
+    </p1>
 </form>
 
-<!-- <div class=""></div> -->
-<canvas class="stream-graphs" id="artists-chart"></canvas></div>
-<canvas class="stream-graphs" id="songs-chart"></canvas></div>
-<canvas class="stream-graphs" id="years-chart"></canvas></div>
-<canvas class="stream-graphs" id="months-chart"></canvas></div>
-<canvas class="stream-graphs" id="times-chart"></canvas></div>
+<div class="chart-selector-buttons">
+<button type="button" id="artistsChartButton" name="artistsChart">Artists Chart</button>
+<button type="button" id="songsChartButton" name="songsChart">Songs Chart</button>
+<button type="button" id="artistsChartButton" name="yearsChart">Years Chart</button>
+<button type="button" id="songsChartButton" name="monthsChart">Months Chart</button>
+<button type="button" id="artistsChartButton" name="timesChart">Times Chart</button>
+</div>
+
+<div class="graphs-div">
+<canvas class="stredam-graphs" id="artists-chart" name="artistsChart"></canvas>
+<canvas class="stredam-graphs" id="songs-chart" name="songsChart"></canvas>
+<canvas class="strdeam-graphs" id="years-chart" name="yearsChart"></canvas>
+<canvas class="strdeam-graphs" id="months-chart" name="monthsChart"></canvas>
+<canvas class="strdeam-graphs" id="times-chart" name="timesChart"></canvas>
+</div>
 
 <form class="streamLengthAndArtistsExclude" id="streamLengthAndArtistsExclude">
-    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="Stream length: 60000ms" id="artistSearch" />
+    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="Stream length: 30 secs" id="artistSearch" />
     <input class="artist-search-box" type="text" placeholder="Search for Artist" id="search"/>
-    <input class="streamLengthInput" type="submit" value="Submit" />
+    <input class="streamLengthInput" type="submit" value="Confirm new selection" />
     <ol class="artistsList" id="artistsList"></ol>
 </form>
 
@@ -73,6 +94,22 @@ streamLengthAndArtistExcludeForm.addEventListener('submit', streamLengthAndArtis
 // Handle multiple fileuploads
 const uploadForm = document.querySelector('.upload');
 uploadForm.addEventListener('submit', combineFiles, false);//can be true or false not sure has no effect atm
+
+const chartSelectorButtons = document.querySelectorAll('.chart-selector-buttons button');
+chartSelectorButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+
+        const graphsDiv = document.querySelector(".graphs-div");
+        for (let i = 0; i < graphsDiv.childElementCount; i++) {
+            if (button.name == graphsDiv.children[i].attributes.name.nodeValue) {
+                document.querySelector(".graphs-div > [name='" + graphsDiv.children[i].attributes.name.nodeValue + "']").style.display='block';
+            }   else {
+                document.querySelector(".graphs-div > [name='" + graphsDiv.children[i].attributes.name.nodeValue + "']").style.display = 'none';
+            }
+            
+        }
+    });
+});
 
 
 </script>

@@ -23,7 +23,7 @@ body {
 }
 
 .grey-body {
-    background-color: rgb(60, 60, 60);
+    background-color: rgb(70, 70, 70);
     min-height: 100%;
     /* overflow: auto; */
 }
@@ -195,7 +195,7 @@ a.active-nav-link{
 
 .streamLengthAndArtistsExclude {
     display: none;
-    padding: 1rem;
+    margin: 1rem;
 }
 
 .artist-search-box {
@@ -208,13 +208,16 @@ a.active-nav-link{
     padding: 1rem;
 } */
 
-.stream-graphs {
+.graphs-div > canvas {
     /* position: relative; */
-    width: 99%;
-    padding: 1rem;
+    width: 90%;
+    /* margin: 3rem; */
     display: none;
 }
 
+.chart-selector-buttons {
+    display: none;
+}
 
 /* Tablet menu */
 @media all and (min-width: 700px) {
