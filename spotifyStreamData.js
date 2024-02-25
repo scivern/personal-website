@@ -1,23 +1,23 @@
 
 function streamLengthAndArtistsExtractor(values) {
     values.preventDefault();
- 
-    let streamLengthValue = values.target[0].value*1000;
-    if (streamLengthValue == "") {streamLengthValue = 30000;}
-
-    let truncateResults = values.target[1].value;
-    if (truncateResults == "") {truncateResults = 30;}
+    document.getElementById('processingText').style.display = 'inline'; 
     
-    artists = values.target;
-    checkedArtists = [];
-    for (artist of artists) {
-        if (artist.checked == true) { checkedArtists.push(artist.value) }
-    }
+    setTimeout(() => {
+        let streamLengthValue = values.target[0].value*1000;
+        if (streamLengthValue == "") {streamLengthValue = 30000;}
 
-    // console.log(checkedArtists);
-    // console.log(streamLengthValue);
+        let truncateResults = values.target[1].value;
+        if (truncateResults == "") {truncateResults = 30;}
+        
+        artists = values.target;
+        checkedArtists = [];
+        for (artist of artists) {
+            if (artist.checked == true) { checkedArtists.push(artist.value) }
+        }
 
-    cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists)
+        cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists)
+    }, 0);
 }
 
 function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists) {
@@ -29,8 +29,10 @@ function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults,
     let cleanedData = dataCleaner(combinedJson, streamLengthValue, checkedArtists);
 
     chartScript(cleanedData, truncateResults);
+    // document.getElementById('processingText').style.display = 'none';
     streamLengthAndArtistExcludeForm.style.display = 'block';
     document.querySelector('.chart-selector-buttons').style.display = 'block';
+    document.getElementById('processingText').style.display = 'none'; 
     // document.querySelector("#artists-chart").style.display = 'block';
 }
 
@@ -80,7 +82,6 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
     }
 
     for (entry of data) {
-
         if (cleanerTimeAndArtist(entry)) { continue; }
         uniqueYears = cleanerSlice(uniqueYears, 0, 4);
         uniqueMonths = cleanerSlice(uniqueMonths, 5, 7);
@@ -122,6 +123,7 @@ function combineFiles(ev) {
     // stop submit button from refreshing page
     ev.preventDefault()
     uploadForm.style.display = 'none';
+    document.getElementById('importAndProcessingHeader').style.display = 'block';
     
     // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
     // let files = ev.currentTarget.files;
@@ -144,6 +146,8 @@ function combineFiles(ev) {
         combinedJson = [];
         for (let i = 0; i < values.length; i++) {
             combinedJson = combinedJson.concat(values[i])
+            // console.log(document.getElementById('importProgress'))
+            // document.getElementById('importProgress').value = values.length/i *100;
         }
         console.log("Files Uploaded and Combined");
 
@@ -193,7 +197,7 @@ function artistListSearch() {
 }
 
 function chartScript(cleanedData, truncateResults) {
-
+    document.getElementById('importAndProcessingHeader').style.display = 'none';
     document.querySelector('#graphsDiv').style.display = 'block';
     let maxLabelLength = 21;
     const chartIds = ["artists-chart", "songs-chart", "years-chart", "months-chart", "times-chart"];
@@ -274,6 +278,6 @@ function chartScript(cleanedData, truncateResults) {
         }
         // document.querySelector("#"+chartIds[i]).style.display = 'none';
     }
-  
+    
     // document.querySelector("#artists-chart").style.display = 'block';
 }

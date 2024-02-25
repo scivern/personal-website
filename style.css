@@ -231,6 +231,20 @@ a.active-nav-link{
     display: none;
 }
 
+.import-and-processing-header {
+    display: none;
+    text-align: center;
+    margin-top: 3rem;
+    color: #FFFFFF;
+}
+
+.processing-text {
+    margin: 2rem;
+    display: none;
+    color: red;
+    font-weight: 500;
+}
+
 /* Tablet menu */
 @media all and (min-width: 700px) {
     .menu {
