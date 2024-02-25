@@ -1,9 +1,13 @@
 
 function streamLengthAndArtistsExtractor(values) {
     values.preventDefault();
-
+ 
     let streamLengthValue = values.target[0].value*1000;
+    if (streamLengthValue == "") {streamLengthValue = 30000;}
+
     let truncateResults = values.target[1].value;
+    if (truncateResults == "") {truncateResults = 30;}
+    
     artists = values.target;
     checkedArtists = [];
     for (artist of artists) {
