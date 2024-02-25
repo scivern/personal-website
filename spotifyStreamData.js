@@ -31,7 +31,7 @@ function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults,
     chartScript(cleanedData, truncateResults);
     streamLengthAndArtistExcludeForm.style.display = 'block';
     document.querySelector('.chart-selector-buttons').style.display = 'block';
-
+    // document.querySelector("#artists-chart").style.display = 'block';
 }
 
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
@@ -193,8 +193,11 @@ function artistListSearch() {
 }
 
 function chartScript(cleanedData, truncateResults) {
+
+    document.querySelector('#graphsDiv').style.display = 'block';
     let maxLabelLength = 21;
     const chartIds = ["artists-chart", "songs-chart", "years-chart", "months-chart", "times-chart"];
+    
     for (let i = 0; i < chartIds.length; i++) {
         const chartExist = Chart.getChart(chartIds[i]); // <canvas> id
         if (chartExist != undefined)
@@ -263,12 +266,14 @@ function chartScript(cleanedData, truncateResults) {
         });
         if (i == 0 || i == 1) {
             chart.options.scales.y.ticks.font.size = chart.chartArea.height / truncateResults;
-        chart.update();}
+            chart.update();
+        }
 
         if (i != 0){
             document.querySelector("#" + chartIds[i]).style.display = 'none';
         }
         // document.querySelector("#"+chartIds[i]).style.display = 'none';
     }
+  
     // document.querySelector("#artists-chart").style.display = 'block';
 }
