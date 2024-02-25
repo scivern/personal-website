@@ -193,7 +193,7 @@ function artistListSearch() {
 }
 
 function chartScript(cleanedData, truncateResults) {
-    // let dataTruncateAmount = 30;
+    let maxLabelLength = 21;
     const chartIds = ["artists-chart", "songs-chart", "years-chart", "months-chart", "times-chart"];
     for (let i = 0; i < chartIds.length; i++) {
         const chartExist = Chart.getChart(chartIds[i]); // <canvas> id
@@ -237,7 +237,14 @@ function chartScript(cleanedData, truncateResults) {
                             font: {
                                 size: 12,
                                 lineHeight: 0,// chart.chartArea.height/30;
-                            }     
+                            },
+                            callback: function(value) {
+                                if (this.getLabelForValue(value).length > maxLabelLength) {
+                                    return this.getLabelForValue(value).substr(0, maxLabelLength) + "...";
+                                }   else {
+                                    return this.getLabelForValue(value);
+                                }
+                            }   
                         },
                                        
                     }
