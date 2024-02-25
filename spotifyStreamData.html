@@ -66,16 +66,17 @@
 <button type="button" id="artistsChartButton" name="timesChart">Times Chart</button>
 </div>
 
-<div class="graphs-div">
-<canvas class="stredam-graphs" id="artists-chart" name="artistsChart"></canvas>
-<canvas class="stredam-graphs" id="songs-chart" name="songsChart"></canvas>
-<canvas class="strdeam-graphs" id="years-chart" name="yearsChart"></canvas>
-<canvas class="strdeam-graphs" id="months-chart" name="monthsChart"></canvas>
-<canvas class="strdeam-graphs" id="times-chart" name="timesChart"></canvas>
+<div class="graphs-div" id="graphsDiv">
+<canvas class="bruh" id="artists-chart" name="artistsChart"></canvas>
+<canvas id="songs-chart" name="songsChart"></canvas>
+<canvas id="years-chart" name="yearsChart"></canvas>
+<canvas id="months-chart" name="monthsChart"></canvas>
+<canvas id="times-chart" name="timesChart"></canvas>
 </div>
 
 <form class="streamLengthAndArtistsExclude" id="streamLengthAndArtistsExclude">
-    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="Stream length: 30 secs" id="artistSearch" />
+    <input class="streamLengthInput" id="streamLength" name="inputStreamLength" value="" placeholder="Stream length: 30 secs" />
+    <input class="streamLengthInput" id="truncateResults" name="inputTruncateResults" value="" placeholder="Length of Results: 30" />
     <input class="artist-search-box" type="text" placeholder="Search for Artist" id="search"/>
     <input class="streamLengthInput" type="submit" value="Confirm new selection" />
     <ol class="artistsList" id="artistsList"></ol>

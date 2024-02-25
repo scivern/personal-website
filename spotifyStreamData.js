@@ -3,7 +3,7 @@ function streamLengthAndArtistsExtractor(values) {
     values.preventDefault();
 
     let streamLengthValue = values.target[0].value*1000;
-
+    let truncateResults = values.target[1].value;
     artists = values.target;
     checkedArtists = [];
     for (artist of artists) {
@@ -13,10 +13,10 @@ function streamLengthAndArtistsExtractor(values) {
     // console.log(checkedArtists);
     // console.log(streamLengthValue);
 
-    cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists)
+    cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists)
 }
 
-function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) {
+function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists) {
     // streamLengthVariable = streamLengthVariable;
     // console.log(streamLength);
 
@@ -24,7 +24,7 @@ function cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists) 
 
     let cleanedData = dataCleaner(combinedJson, streamLengthValue, checkedArtists);
 
-    chartScript(cleanedData);
+    chartScript(cleanedData, truncateResults);
     streamLengthAndArtistExcludeForm.style.display = 'block';
     document.querySelector('.chart-selector-buttons').style.display = 'block';
 
@@ -158,8 +158,9 @@ function combineFiles(ev) {
         document.getElementById("artistsList").innerHTML = result;
 
         let streamLengthValue = 30000;
+        let truncateResults = 30;
         let checkedArtists = [];
-        cleaningAndDisplaying(combinedJson, streamLengthValue, checkedArtists);
+        cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists);
 
     });
 }
@@ -187,7 +188,8 @@ function artistListSearch() {
     }
 }
 
-function chartScript(cleanedData) {
+function chartScript(cleanedData, truncateResults) {
+    // let dataTruncateAmount = 30;
     const chartIds = ["artists-chart", "songs-chart", "years-chart", "months-chart", "times-chart"];
     for (let i = 0; i < chartIds.length; i++) {
         const chartExist = Chart.getChart(chartIds[i]); // <canvas> id
@@ -200,20 +202,21 @@ function chartScript(cleanedData) {
         let chart = new Chart(myChart, {
             type: "bar",
             data: {
-                labels: arrayColumn(cleanedData[i], 0).slice(0, 30),
+                labels: arrayColumn(cleanedData[i], 0).slice(0, truncateResults),
                 datasets: [{
-                    data: arrayColumn(cleanedData[i], 1).slice(0, 30)
+                    data: arrayColumn(cleanedData[i], 1).slice(0, truncateResults)
                 }],
             },
             options: {
+                maintainAspectRatio: false,
                 indexAxis: 'y',
-                responsive: 'true',
+                responsive: true,
                 scales: {
                     x: {
                         title: {
                             display: 'true',
                             text: 'Number of Streams',
-                            color: 'white'
+                            color: 'white',
                         },
                         ticks: {
                             color: 'white'
@@ -226,8 +229,13 @@ function chartScript(cleanedData) {
                             color: 'white'
                         },
                         ticks: {
-                            color: 'white'
-                        }
+                            color: 'white',
+                            font: {
+                                size: 12,
+                                lineHeight: 0,// chart.chartArea.height/30;
+                            }     
+                        },
+                                       
                     }
                 },
                 plugins: {
@@ -242,6 +250,9 @@ function chartScript(cleanedData) {
                 }
             }
         });
+        if (i == 0 || i == 1) {
+            chart.options.scales.y.ticks.font.size = chart.chartArea.height / truncateResults;
+        chart.update();}
 
         if (i != 0){
             document.querySelector("#" + chartIds[i]).style.display = 'none';
