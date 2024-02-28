@@ -41,8 +41,8 @@ body {
 }
 
 .standard-nav {
-    /* background: transparent; */
-    background-color: rgba(0, 0, 0, 0.6);
+    background: transparent;
+    /* background-color: rgba(0, 0, 0, 0.6); */
     padding: 0 15px;
     position: relative;
     z-index: 99;
@@ -157,13 +157,13 @@ a.active-nav-link{
 }
 
 .submenu a {
-    color: rgb(253, 66, 66);;
+    color: aqua;
     text-decoration: none;
 }
 
 .submenu a:hover,
 .subitem > .active-nav-link {
-    color: aqua
+    color: rgb(253, 66, 66);
 }
 
 .landing-page-main {
@@ -308,9 +308,10 @@ a.active-nav-link{
         /* right: 100%; */
         /* top: 68px; */
         top: 75px;
-        background-color: rgba(0, 0, 0, 0.6);
+        /* background-color: rgba(0, 0, 0, 0.6); */
         /* background-color: aqua; */
         width: 100%;
+        border-radius: 10px;
     }
 
     .toggle {
