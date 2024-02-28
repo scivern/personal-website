@@ -30,7 +30,7 @@ body {
     /* overflow: auto; */
 }
 
-.nav-bottom-line {
+.nav-space-background {
     /* border-bottom: solid #FFFFFF; */
     background-image: url(images/Final-Image-JPG.jpg);
 }
@@ -46,6 +46,7 @@ body {
     padding: 0 15px;
     position: relative;
     z-index: 99;
+    box-shadow: 0px 5px 10px 5px rgba(0, 0, 0, 0.5);
 }
 
 .standard-nav a {
@@ -64,8 +65,13 @@ body {
     padding: 7.5px 10px 7.5px 0;
 }
 
+.logo a {
+    width: max-content;
+}
+
 .item {
     padding: 10px;
+    margin: auto;
 }
 
 /* Mobile menu */
@@ -104,6 +110,8 @@ body {
 /* Submenu up from mobile screens */
 .submenu {
     display: none;
+    /* box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 2px, rgba(0, 0, 0, 0.5) -2px 2px 2px, rgba(0, 0, 0, 0.5) 0px 2px 2px; */
+    /* margin-top: 1px; */
 }
 
 .submenu-active .submenu {
@@ -128,9 +136,11 @@ body {
     padding: 10px 15px;
 }
 
+/* .submenu {
+    margin-top: 50px;
+} */
+
 .submenu-active {
-    /* background-color: transparent; */
-    /* background-color: rgba(70, 70, 70, 0.5); */
     border-radius: 3px;
 }
 
@@ -138,13 +148,22 @@ body {
     text-decoration: underline 0.1em transparent;
     text-underline-offset: 0.3em;
     transition: text-decoration 500ms ease-out;
-    /* transition: text-decoration-color 600ms text_underline-offset 600ms; */
 }
 
 .standard-nav a:hover,
 a.active-nav-link{
     text-decoration-color: rgb(255, 255, 255);
     text-underline-offset: 0.3em;
+}
+
+.submenu a {
+    color: rgb(253, 66, 66);;
+    text-decoration: none;
+}
+
+.submenu a:hover,
+.subitem > .active-nav-link {
+    color: aqua
 }
 
 .landing-page-main {
@@ -175,8 +194,6 @@ a.active-nav-link{
 .landing-page-main h1 {
     font-size: 3rem;
 }
-
-
 
 .upload p1 {
     display: block;
@@ -276,6 +293,8 @@ a.active-nav-link{
     }
 
     .item {
+        /* flex: 0; */
+        flex: 0.15;
         order: 1;
         position: relative;
         display: block;
@@ -286,9 +305,12 @@ a.active-nav-link{
         display: block;
         position: absolute;
         left: 0;
-        top: 68px;
-        /* background: transparent; */
+        /* right: 100%; */
+        /* top: 68px; */
+        top: 75px;
         background-color: rgba(0, 0, 0, 0.6);
+        /* background-color: aqua; */
+        width: 100%;
     }
 
     .toggle {
@@ -304,4 +326,127 @@ a.active-nav-link{
         max-width: 40%;
         font-size: 1.2rem;
     }
+
+    .submenu {
+        box-shadow: -10px 8px 25px rgba(0, 0, 0, 0.5), 10px 8px 25px rgba(0, 0, 0, 0.5);
+    }
 }
+
+
+
+
+
+
+
+
+
+/* .gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #fff;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 2rem;
+    padding: 10px;
+}
+
+.gallery-item {
+    flex-basis: 32.7%;
+    margin-bottom: 6px;
+    opacity: .85;
+    cursor: pointer;
+}
+
+.gallery-item:hover {
+    opacity: 1;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-content {
+    font-size: .8em;
+}
+
+.lightbox {
+    position: fixed;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    top: 0;
+    left: 0;
+}
+
+.lightbox-content {
+    position: relative;
+    width: 70%;
+    height: 70%;
+    margin: 5% auto;
+}
+
+.lightbox-content img {
+    border-radius: 7px;
+    box-shadow: 0 0 3px 0 rgba(225, 225, 225, .25);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 7px;
+    top: 45%;
+    cursor: pointer;
+}
+
+.lightbox-prev {
+    left: 0;
+}
+
+.lightbox-next {
+    right: 0;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    opacity: .8;
+}
+
+@media (max-width: 767px) {
+    .gallery-container {
+        width: 100%;
+    }
+
+    .gallery-item {
+        flex-basis: 49.80%;
+        margin-bottom: 3px;
+    }
+
+    .lightbox-content {
+        width: 80%;
+        height: 60%;
+        margin: 15% auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-item {
+        flex-basis: 100%;
+        margin-bottom: 1px;
+    }
+
+    .lightbox-content {
+        width: 90%;
+        margin: 20% auto;
+    }
+} */
