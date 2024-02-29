@@ -33,16 +33,17 @@ body {
 .nav-space-background {
     /* border-bottom: solid #FFFFFF; */
     background-image: url(images/Final-Image-JPG.jpg);
+    background-position: center left;
 }
 
 .main-spotify-stream-data {
-    margin: 1rem;
-    height: 85%;
+    margin: 2rem 1rem 1rem 1rem;
+    height: 80%;
 }
 
 .standard-nav {
-    background: transparent;
-    /* background-color: rgba(0, 0, 0, 0.6); */
+    /* background: transparent; */
+    background-color: rgba(0, 0, 0, 0.7);
     padding: 0 15px;
     position: relative;
     z-index: 99;
@@ -88,7 +89,7 @@ body {
 }
 
 .menu li.subitem a {
-    padding: 15px;
+    padding: 15px 10px;
 }
 
 .toggle {
@@ -130,6 +131,8 @@ body {
     content: "\f078";
     color: white;
     padding-left: 5px;
+    /* text-decoration: none; */
+    display: inline-block;
 }
 
 .subitem a {
@@ -144,13 +147,13 @@ body {
     border-radius: 3px;
 }
 
-.standard-nav a {
+.item a {
     text-decoration: underline 0.1em transparent;
     text-underline-offset: 0.3em;
     transition: text-decoration 500ms ease-out;
 }
 
-.standard-nav a:hover,
+.item a:hover,
 a.active-nav-link{
     text-decoration-color: rgb(255, 255, 255);
     text-underline-offset: 0.3em;
@@ -195,15 +198,24 @@ a.active-nav-link{
     font-size: 3rem;
 }
 
+.upload {
+    display: block;
+    text-align: center;
+    margin: 3rem auto;
+    font-size: large;
+}
+
 .upload p1 {
     display: block;
-    padding: 1rem;
+    margin: 3rem auto;
+    text-align: start;
+    max-width: 100ch;
 }
 
 .artistsList {
     position: relative;
     /* right: 100px; */
-    height: 300px;
+    height: 14rem;
     width: 90%;
     /* top: 1rem; */
     overflow: hidden;
@@ -282,6 +294,11 @@ a.active-nav-link{
 
 /* Desktop menu */
 @media all and (min-width: 960px) {
+
+    .standard-nav {
+        background-color: transparent;
+    }
+
     .menu {
         align-items: flex-start;
         flex-wrap: nowrap;
