@@ -274,6 +274,19 @@ a.active-nav-link{
     font-weight: 500;
 }
 
+.main-media {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.main-media a{
+    margin: 2rem;
+    color: rgb(221, 179, 42);;
+}
+
 /* Tablet menu */
 @media all and (min-width: 700px) {
     .menu {
