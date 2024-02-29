@@ -329,6 +329,7 @@ a.active-nav-link{
         /* background-color: aqua; */
         width: 100%;
         border-radius: 10px;
+        padding-top: 0.5rem;
     }
 
     .toggle {
