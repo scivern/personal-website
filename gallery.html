@@ -39,26 +39,77 @@
 
 <main>
 
-<!-- <div class="gallery-container">
-    <div class="gallery-item" data-index="1">
-        <img src="images/Final Image.jpg">
+<div class="slideshow-container">
+    <div class="image-gallery">
+        <div class="image-container">
+            <img src="images/1708956488586.jpg" alt="Night sky w/ clouds">
+        </div>
+        <div class="image-container">
+            <img src="images/Final Image.jpg" alt="Hercules Cluster">
+        </div>
+        <div class="image-container">
+            <img src="images/Final-Image-JPG.jpg" alt="Orion Nebula">
+        </div>
+        <div class="image-container">
+            <img src="images/IMG_5657.jpg" alt="Moon">
+        </div>
+        <div class="image-container">
+            <img src="images/IMG_6916.jpg" alt="Milky Way">
+        </div>
+        <div class="image-container">
+            <img src="images/jupe-4.jpg" alt="Jupiter">
+        </div>
+
     </div>
-    <div class="gallery-item" data-index="2">
-        <img src="images/Final-Image-JPG.jpg">
-    </div>
-    <div class="gallery-item" data-index="3">
-        <img src="images/IMG_5657.jpg">
-    </div>
-    <div class="gallery-item" data-index="4">
-        <img src="images/IMG_6916.jpg">
-    </div>
-    <div class="gallery-item" data-index="5">
-        <img src="images/jupe-4.jpg">
-    </div>
-    <div class="gallery-item" data-index="6">
-        <img src="images/1708956488586.jpg">
-    </div>
-</div> -->
+    <a class="prev-img" onclick="slides(-1)">❮</a>
+    <a class="next-img" onclick="slides(1)">❯</a>
+</div>
+
+<div class="bottom-img-container">
+    <img class="bottom-img current-bottom-img" src="images/1708956488586.jpg" onclick="activeSlides(1)">
+    <img class="bottom-img" src="images/Final Image.jpg" onclick="activeSlides(2)">
+    <img class="bottom-img" src="images/Final-Image-JPG.jpg" onclick="activeSlides(3)">
+    <img class="bottom-img" src="images/IMG_5657.jpg" onclick="activeSlides(4)">
+    <img class="bottom-img" src="images/IMG_6916.jpg" onclick="activeSlides(5)">
+    <img class="bottom-img" src="images/jupe-4.jpg" onclick="activeSlides(6)">
+
+</div>
+
+<script>
+    var index = 1;
+    displaySlides(index);
+
+    function slides(n) {
+        displaySlides(index += n);
+    }
+
+    function activeSlides(n) {
+        displaySlides(index = n);
+    }
+
+    function displaySlides(n) {
+        var i;
+        var allSlides = document.getElementsByClassName("image-container");
+        var allThumbnails = document.getElementsByClassName("bottom-img");
+
+        if (n > allSlides.length) {
+            index = 1;
+        }
+        if (n < 1) {
+            index = allSlides.length;
+        }
+        for (i = 0; i < allSlides.length; i++) {
+            allSlides[i].style.display = "none";
+        }
+        for (i = 0; i < allThumbnails.length; i++) {
+            allThumbnails[i].className = allThumbnails[i].className.replace(" current-bottom-img", "");
+            allThumbnails[i].style.filter = "brightness(50%)";
+        }
+        allSlides[index - 1].style.display = "block";
+        allThumbnails[index - 1].className += " current-bottom-img";
+        allThumbnails[index - 1].style.filter = "brightness(100%)";
+    }
+</script>
 
 
 </main>
