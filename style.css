@@ -14,7 +14,7 @@ body {
 
 .standard-body {
     background-image: url("images/Final-Image-JPG.jpg");
-    min-height: 100vh;
+    min-height: 100svh;
     background-repeat: no-repeat;
     color: #FFFFFF;
     background-size: cover;
