@@ -287,6 +287,66 @@ a.active-nav-link{
     color: rgb(221, 179, 42);;
 }
 
+.music-buttons {
+    text-align: center;
+    padding: 2rem;
+}
+
+.music-buttons button {
+    margin: auto;
+    /* padding: 1rem; */
+}
+
+.music-grid-container {
+    display: grid;
+    /* padding: 2rem; */
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto;
+    justify-content: center;
+    column-gap: 20rem;
+    font-size: 1rem;
+    height: 70vh;
+    transition: 1s ease-in-out;
+    /* width: 500px; */
+    /* margin: 1rem -0.2rem; */
+    overflow: hidden;
+    left: 50%;
+    width: 2000px;
+    transform: translateX(-50%);
+    position: absolute;
+}
+
+.music-grid-item {
+    /* position: relative; */
+    text-align: center;
+    width: 300px;
+    overflow-y: scroll;
+    /* margin: auto 0; */
+    /* padding: 10rem; */
+    /* overflow: hidden; */
+}
+
+.music-grid-subitem {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 100%;
+    /* padding: 1rem; */
+    row-gap: 1rem;
+    
+}
+
+.music-grid-subitem img {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.music-grid-subitem p1 {
+    padding-left: 1rem;
+    text-align: left;
+    margin: auto 0;
+}
+
 /* Tablet menu */
 @media all and (min-width: 700px) {
     .menu {
@@ -341,7 +401,7 @@ a.active-nav-link{
         /* background-color: rgba(0, 0, 0, 0.6); */
         /* background-color: aqua; */
         width: 100%;
-        border-radius: 10px;
+        border-radius: 0 0 25px 25px;
         padding-top: 0.5rem;
     }
 

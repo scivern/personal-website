@@ -37,10 +37,103 @@
         </nav>
     </header>
 
-<main>
+<main style="overflow: hidden;position: relative;height: 90vh;">
 
-Fav artist, songs, albums (top 5's?)
+<!-- Fav artist, songs, albums (top 5's?) -->
+<div class="music-buttons">
+<button class="songs-button">Songs</button>
+<button class="albums-button">Albums</button>
+<button class="artists-button">Artists</button>
+</div>
 
+<div class="music-grid-container">
+    
+<div class="music-grid-item">
+    <div class="music-grid-subitem">
+        <img src="images/music pictures/blackwater park.jpg">
+        <p1>Blackwater Park -<br>Opeth</p1>
+
+        <img src="images/music pictures/still life.jpg">
+        <p1>Still Life -<br>Opeth</p1>
+
+        <img src="images/music pictures/brand new eyes.jpg">
+        <p1>Brand New Eyes -<br>Paramore</p1>
+
+        <img src="images/music pictures/holy wars.jpg">
+        <p1>Holy Wars -<br>Megadeth</p1>
+
+        <img src="images/music pictures/illmatic.webp">
+        <p1>Illmatic -<br>Nas</p1>
+
+        <img src="images/music pictures/led zep 4.jpg">
+        <p1>Led Zeppelin IV -<br>Led Zeppelin</p1>
+
+        <img src="images/music pictures/paranoid.jpg">
+        <p1>Paranoid -<br>Black Sabbath</p1>
+
+        <img src="images/music pictures/peace sells.jpg">
+        <p1>Peace Sells... But Who's Buying? -<br>Megadeth</p1>
+
+        <img src="images/music pictures/there is a hell.jpg">
+        <p1>There is a Hell... -<br>Bring Me The Horizon</p1>
+    </div>
+</div>
+
+<div class="music-grid-item">
+    <div class="music-grid-subitem">
+        <img src="images/music pictures/blackwater park.jpg">
+        <p1>Blackwater Park -<br>Opeth</p1>
+        
+        <img src="images/music pictures/still life.jpg">
+        <p1>Still Life -<br>Opeth</p1>
+
+        <img src="images/music pictures/brand new eyes.jpg">
+        <p1>Brand New Eyes -<br>Paramore</p1>
+
+        <img src="images/music pictures/holy wars.jpg">
+        <p1>Holy Wars -<br>Megadeth</p1>
+
+        <img src="images/music pictures/illmatic.webp">
+        <p1>Illmatic -<br>Nas</p1>
+
+        <img src="images/music pictures/led zep 4.jpg">
+        <p1>Led Zeppelin IV -<br>Led Zeppelin</p1>
+
+        <img src="images/music pictures/paranoid.jpg">
+        <p1>Paranoid -<br>Black Sabbath</p1>
+
+        <img src="images/music pictures/peace sells.jpg">
+        <p1>Peace Sells... But Who's Buying? -<br>Megadeth</p1>
+
+        <img src="images/music pictures/there is a hell.jpg">
+        <p1>There is a Hell... -<br>Bring Me The Horizon</p1>
+    </div>
+</div>
+
+<div class="music-grid-item">
+    <div class="music-grid-subitem">
+        <img src="images/music pictures/opeth.png">
+        <p1>Opeth</p1>
+
+        <img src="images/music pictures/megadeth.png">
+        <p1>Megadeth</p1>
+
+        <img src="images/music pictures/black sabbath.webp">
+        <p1>Black Sabbath</p1>
+
+        <img src="images/music pictures/led zep.gif">
+        <p1>Led Zeppelin</p1>
+
+        <img src="images/music pictures/bmth.webp">
+        <p1>Bring Me The Horizon</p1>
+
+        <img src="images/music pictures/paramore.png">
+        <p1>Paramore</p1>
+
+    </div>
+</div>
+
+</div>
 
 </main>
 
@@ -48,4 +141,16 @@ Fav artist, songs, albums (top 5's?)
 
 <script src="/script.js"></script>
 
+<script>
+
+document.querySelector('.songs-button').addEventListener('click', () => moveMusic("38.5rem"), false)
+document.querySelector('.albums-button').addEventListener('click', () => moveMusic("0"), false)
+document.querySelector('.artists-button').addEventListener('click', () => moveMusic("-38.5rem"), false)
+
+
+function moveMusic(direction) {
+    document.querySelector('.music-grid-container').style.translate = direction + " 0px";
+}
+
+</script>
 </html>
