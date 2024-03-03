@@ -287,14 +287,43 @@ a.active-nav-link{
     color: rgb(221, 179, 42);;
 }
 
+.main-music {
+    overflow: hidden;
+    position: relative;
+    height: 90vh;
+    margin-top: 1rem;
+}
+
+.main-music h1 {
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 1rem 1rem 0 1rem;
+    margin: auto;
+    text-align: center;
+}
+
 .music-buttons {
     text-align: center;
     padding: 2rem;
+    display: flex;
+    flex: 1;
 }
 
 .music-buttons button {
     margin: auto;
-    /* padding: 1rem; */
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 0 white;
+    transition: 1s;
+}
+
+.music-buttons button:nth-child(2) {
+    color: rgb(221, 179, 42);
+    box-shadow: 0 0 1rem 0 rgb(221, 179, 42);
 }
 
 .music-grid-container {
@@ -305,7 +334,7 @@ a.active-nav-link{
     justify-content: center;
     column-gap: 20rem;
     font-size: 1rem;
-    height: 70vh;
+    height: 60vh;
     transition: 1s ease-in-out;
     /* width: 500px; */
     /* margin: 1rem -0.2rem; */

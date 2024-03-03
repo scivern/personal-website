@@ -37,9 +37,10 @@
         </nav>
     </header>
 
-<main style="overflow: hidden;position: relative;height: 90vh;">
+<main class="main-music">
 
 <!-- Fav artist, songs, albums (top 5's?) -->
+<h1>Favourite songs, albums and artists by date of first listen (recent first)</h1>
 <div class="music-buttons">
 <button class="songs-button">Songs</button>
 <button class="albums-button">Albums</button>
@@ -51,31 +52,56 @@
 <div class="music-grid-item">
     <div class="music-grid-subitem">
         <img src="images/music pictures/blackwater park.jpg">
-        <p1>Blackwater Park -<br>Opeth</p1>
-
-        <img src="images/music pictures/still life.jpg">
-        <p1>Still Life -<br>Opeth</p1>
-
-        <img src="images/music pictures/brand new eyes.jpg">
-        <p1>Brand New Eyes -<br>Paramore</p1>
+        <p1>Blackwater Park -<br>Opeth<br>(Nov 2021)</p1>
 
         <img src="images/music pictures/holy wars.jpg">
-        <p1>Holy Wars -<br>Megadeth</p1>
+        <p1>Holy Wars... The Punishment Due -<br>Megadeth<br>(Feb 2019)</p1>
 
+        <img src="images/music pictures/conditions.jpg">
+        <p1>Sweet Disposition -<br>The Temper Trap<br>(Mar 2021)</p1>
+        
         <img src="images/music pictures/illmatic.webp">
-        <p1>Illmatic -<br>Nas</p1>
+        <p1>It Ain't Hard to Tell -<br>Nas<br>(Oct 2020)</p1>
 
-        <img src="images/music pictures/led zep 4.jpg">
-        <p1>Led Zeppelin IV -<br>Led Zeppelin</p1>
+        <img src="images/music pictures/filosofem.jpg">
+        <p1>Dunkelheit -<br>Burzum<br>(May 2020)</p1>
 
-        <img src="images/music pictures/paranoid.jpg">
-        <p1>Paranoid -<br>Black Sabbath</p1>
+        <img src="images/music pictures/test and recognise.jpg">
+        <p1>Test & Recognise - Flume Re-work -<br>Seekae, Flume<br>(Feb 2020)</p1>
+        
+        <img src="images/music pictures/tsrts.jpg">
+        <p1>No Quarter (Live MSG) -<br>Led Zeppelin<br>(Apr 2019)</p1>
 
-        <img src="images/music pictures/peace sells.jpg">
-        <p1>Peace Sells... But Who's Buying? -<br>Megadeth</p1>
+        <img src="images/music pictures/shine on.jpg">
+        <p1>Shine On You Crazy Diamond - Pts. 1-5 -<br>Pink Floyd<br>(Aug 2018)</p1>
+
+        <img src="images/music pictures/gkmc.jpg">
+        <p1>Money Trees -<br>Kendrick Lamar<br>(Mar 2017)</p1>
+
+        <img src="images/music pictures/odyssey.jpg">
+        <p1>Resonance -<br>Home<br>(Dec 2016)</p1>
 
         <img src="images/music pictures/there is a hell.jpg">
-        <p1>There is a Hell... -<br>Bring Me The Horizon</p1>
+        <p1>Crucify Me -<br>Bring me the Horizon<br>(Jan 2016)</p1>
+        
+        <img src="images/music pictures/sempiternal.jpg">
+        <p1>Sleepwalking -<br>Bring Me The Horizon<br>(Jan 2016)</p1>
+        
+        <img src="images/music pictures/drown.jpg">
+        <p1>Drown -<br>Bring Me The Horizon<br>(July 2015)</p1>
+
+        <img src="images/music pictures/led zep 4.jpg">
+        <p1>Stairway to Heaven -<br>Led Zeppelin<br>(March 2016)</p1>
+
+        <img src="images/music pictures/decode.jpg">
+        <p1>Decode -<br>Paramore<br>(Feb 2016)</p1>      
+
+        <img src="images/music pictures/skyrim.jpg">
+        <p1>Secunda -<br>Jeremy Soule<br>(11.11.11)</p1>
+
+        <img src="images/music pictures/takk.jpg">
+        <p1>Hoppipolla -<br>Sigur Ros<br>(&lt; 2011)</p1>
+
     </div>
 </div>
 
@@ -143,13 +169,31 @@
 
 <script>
 
-document.querySelector('.songs-button').addEventListener('click', () => moveMusic("38.5rem"), false)
-document.querySelector('.albums-button').addEventListener('click', () => moveMusic("0"), false)
-document.querySelector('.artists-button').addEventListener('click', () => moveMusic("-38.5rem"), false)
+let musicButtons = document.querySelector('.music-buttons').children;
+
+let songsButton = document.querySelector('.songs-button');
+songsButton.addEventListener('click', () => moveMusic("38.5rem", 0), false);
+
+let albumsButton = document.querySelector('.albums-button');
+albumsButton.addEventListener('click', () => moveMusic("0", 1), false);
+
+let artistsButton = document.querySelector('.artists-button');
+artistsButton.addEventListener('click', () => moveMusic("-38.5rem", 2), false);
 
 
-function moveMusic(direction) {
+function moveMusic(direction, buttonIndex) {
     document.querySelector('.music-grid-container').style.translate = direction + " 0px";
+
+    for (let i = 0; i < musicButtons.length; i++) {
+        if (i == buttonIndex) {
+            musicButtons[i].style.color = "rgb(221, 179, 42)";
+            musicButtons[i].style.boxShadow = "0 0 1rem 0 rgb(221, 179, 42)";
+
+        }   else {
+            musicButtons[i].style.color = "white";
+            musicButtons[i].style.boxShadow = "0 0 1rem 0 white";
+        }
+    }
 }
 
 </script>
