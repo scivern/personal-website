@@ -326,17 +326,6 @@ a.active-nav-link{
     box-shadow: 0 0 1rem 0 rgb(221, 179, 42);
 }
 
-@media all and (min-width: 960px) {
-    .music-buttons button {
-        pointer-events: none;
-    }
-
-    .music-buttons button:nth-child(2) {
-        color: white;
-        box-shadow: 0 0 1rem 0 white;
-    }
-}
-
 .music-grid-container {
     display: grid;
     /* padding: 2rem; */
@@ -390,6 +379,21 @@ a.active-nav-link{
 .music-grid-subject {
     /* color: rgb(221, 179, 42); */
     color: greenyellow;
+}
+
+@media all and (min-width: 960px) {
+    .music-buttons button {
+        pointer-events: none;
+    }
+
+    .music-buttons button:nth-child(2) {
+        color: white;
+        box-shadow: 0 0 1rem 0 white;
+    }
+
+    .music-buttons {
+        margin-top: 2rem;
+    }
 }
 
 /* Tablet menu */
