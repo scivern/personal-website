@@ -293,6 +293,13 @@ a.active-nav-link{
     color: greenyellow;
 }
 
+
+
+
+
+
+
+
 .main-music {
     overflow: hidden;
     position: relative;
@@ -380,6 +387,7 @@ a.active-nav-link{
     padding: 0 1rem;
     text-align: left;
     margin: auto 0;
+    text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black;
 }
 
 .music-grid-subject {
@@ -401,6 +409,130 @@ a.active-nav-link{
         margin-top: 2rem;
     }
 }
+
+
+
+
+
+.main-filmsTV {
+    overflow: hidden;
+    position: relative;
+    height: 90vh;
+    margin-top: 1rem;
+}
+
+.main-filmsTV h1 {
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 1rem 1rem 0 1rem;
+    margin: auto;
+    text-align: center;
+}
+
+.filmsTV-buttons {
+    text-align: center;
+    padding: 2rem;
+    display: flex;
+    flex: 1;
+}
+
+.filmsTV-buttons button {
+    margin: auto;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 0 white;
+    transition: 1s;
+}
+
+.filmsTV-buttons button:nth-child(1) {
+    color: rgb(221, 179, 42);
+    box-shadow: 0 0 1rem 0 rgb(221, 179, 42);
+}
+
+.filmsTV-container {
+    margin: auto;
+    height: 60svh;
+    padding: 1rem;
+    overflow: hidden;
+    /* display: grid; */
+    position: relative;
+    
+}
+
+.filmsTV-grid-item {
+    display: block;
+    text-align: center;
+    width: 300px;
+    overflow-y: scroll;
+    margin: auto;
+    height: 100%;
+    transition: 1s;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.films {
+    z-index: 1;
+}
+
+.tv {
+    opacity: 0;
+}
+
+.filmsTV-grid-subitem {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: 100%;
+    /* padding: 1rem; */
+    row-gap: 1rem;
+    
+
+}
+
+.filmsTV-grid-subitem img {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.filmsTV-grid-subitem p1 {
+    padding: 0 1rem;
+    text-align: left;
+    margin: auto 0;
+    text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black;
+}
+
+.filmsTV-grid-subject {
+    /* color: rgb(221, 179, 42); */
+    color: greenyellow;
+}
+
+@media all and (min-width: 960px) {
+    .filmsTV-buttons button {
+        pointer-events: none;
+    }
+
+    .filmsTV-buttons button:nth-child(2) {
+        color: white;
+        box-shadow: 0 0 1rem 0 white;
+    }
+
+    .filmsTV-buttons {
+        margin-top: 2rem;
+    }
+}
+
+
+
+
+
+
+
 
 /* Tablet menu */
 @media all and (min-width: 700px) {
