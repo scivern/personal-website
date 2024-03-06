@@ -396,6 +396,11 @@ a.active-nav-link{
 }
 
 @media all and (min-width: 960px) {
+    
+    .main-music h1 {
+        padding: 2rem 1rem 0 1rem;
+    }
+
     .music-buttons button {
         pointer-events: none;
     }
@@ -456,15 +461,15 @@ a.active-nav-link{
 .filmsTV-container {
     margin: auto;
     height: 60svh;
-    padding: 1rem;
-    overflow: hidden;
+    /* padding: 1rem; */
+    /* overflow: hidden; */
     /* display: grid; */
     position: relative;
     
 }
 
 .filmsTV-grid-item {
-    display: block;
+    /* display: block; */
     text-align: center;
     width: 300px;
     overflow-y: scroll;
@@ -507,23 +512,46 @@ a.active-nav-link{
     text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black;
 }
 
-.filmsTV-grid-subject {
-    /* color: rgb(221, 179, 42); */
+/* .filmsTV-grid-subject {
+    color: rgb(221, 179, 42);
     color: greenyellow;
-}
+} */
 
 @media all and (min-width: 960px) {
+
+    .main-filmsTV h1 {
+        padding: 2rem 1rem 0 1rem;
+    }
+
+    .filmsTV-buttons {
+        padding: 2rem 0;
+    }
+
     .filmsTV-buttons button {
         pointer-events: none;
     }
 
-    .filmsTV-buttons button:nth-child(2) {
+    .filmsTV-buttons button:nth-child(1) {
         color: white;
         box-shadow: 0 0 1rem 0 white;
     }
 
     .filmsTV-buttons {
         margin-top: 2rem;
+    }
+
+    .tv {
+        opacity: 1;
+    }
+
+    .filmsTV-container{
+        display: flex;
+    }
+
+    .filmsTV-grid-item {
+        position: relative;
+        left: 0;
+        transform: translateX(0);
     }
 }
 
