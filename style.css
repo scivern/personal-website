@@ -442,7 +442,6 @@ a.active-nav-link{
     text-align: center;
     padding: 2rem;
     display: flex;
-    flex: 1;
 }
 
 .filmsTV-buttons button {
@@ -468,8 +467,7 @@ a.active-nav-link{
     /* padding: 1rem; */
     /* overflow: hidden; */
     /* display: grid; */
-    position: relative;
-    
+    position: relative;    
 }
 
 .filmsTV-grid-item {
@@ -529,19 +527,18 @@ a.active-nav-link{
 
     .filmsTV-buttons {
         padding: 2rem 0;
+        justify-content: space-evenly;
+        margin-top: 2rem;
     }
 
     .filmsTV-buttons button {
         pointer-events: none;
+        margin: 0;
     }
 
     .filmsTV-buttons button:nth-child(1) {
         color: white;
         box-shadow: 0 0 1rem 0 white;
-    }
-
-    .filmsTV-buttons {
-        margin-top: 2rem;
     }
 
     .tv {
@@ -550,6 +547,8 @@ a.active-nav-link{
 
     .filmsTV-container{
         display: flex;
+        justify-content: space-evenly;
+        margin: 0;
     }
 
     .filmsTV-grid-item {
@@ -557,6 +556,7 @@ a.active-nav-link{
         left: 0;
         transform: translateX(0);
         width: 450px;
+        margin: 0;
     }
 }
 
