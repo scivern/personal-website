@@ -413,6 +413,10 @@ a.active-nav-link{
     .music-buttons {
         margin-top: 2rem;
     }
+
+    .music-grid-item {
+        width: 350px;
+    }
 }
 
 
@@ -552,6 +556,7 @@ a.active-nav-link{
         position: relative;
         left: 0;
         transform: translateX(0);
+        width: 450px;
     }
 }
 
