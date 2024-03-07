@@ -1,130 +1,27 @@
-
-function streamLengthAndArtistsExtractor(values) {
-    values.preventDefault();
-    document.getElementById('processingText').style.display = 'inline'; 
-    
-    setTimeout(() => {
-        let streamLengthValue = values.target[0].value*1000;
-        if (streamLengthValue == "") {streamLengthValue = 30000;}
-
-        let truncateResults = values.target[1].value;
-        if (truncateResults == "") {truncateResults = 30;}
-        
-        artists = values.target;
-        checkedArtists = [];
-        for (artist of artists) {
-            if (artist.checked == true) { checkedArtists.push(artist.value) }
-        }
-
-        cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists)
-    }, 0);
-}
-
-function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists) {
-    // streamLengthVariable = streamLengthVariable;
-    // console.log(streamLength);
-
-    // console.log(uniqueArtistsCheckbox);
-
-    let cleanedData = dataCleaner(combinedJson, streamLengthValue, checkedArtists);
-
-    chartScript(cleanedData, truncateResults);
-    // document.getElementById('processingText').style.display = 'none';
-    streamLengthAndArtistExcludeForm.style.display = 'block';
-    document.querySelector('.chart-selector-buttons').style.display = 'block';
-    document.getElementById('processingText').style.display = 'none'; 
-    // document.querySelector("#artists-chart").style.display = 'block';
-}
-
-const arrayColumn = (arr, n) => arr.map(x => x[n]);
-
-function dataCleaner(data, streamLengthValue, checkedArtists) {
-
-    // let streamLength = 60000;
-    // console.log(streamLengthValue, checkedArtists);
-    let uniqueArtists = [];
-    let uniqueSongs = [];
-    let uniqueYears = [];
-    let uniqueMonths = [["01", 0], ["02", 0], ["03", 0], ["04", 0], ["05", 0], ["06", 0],
-    ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0], ["12", 0]];
-
-    let uniqueTimes = [["00", 0], ["01", 0], ["02", 0], ["03", 0], ["04", 0], ["05", 0],
-    ["06", 0], ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0],
-    ["12", 0], ["13", 0], ["14", 0], ["15", 0], ["16", 0], ["17", 0],
-    ["18", 0], ["19", 0], ["20", 0], ["21", 0], ["22", 0], ["23", 0]];
-
-    function cleanerTimeAndArtist(entry) {
-        return entry["ms_played"] < streamLengthValue || entry['master_metadata_album_artist_name'] === null || checkedArtists.includes(entry['master_metadata_album_artist_name']);
-    }
-
-    function cleanerSlice(uniqueArray, sliceLower, sliceUpper) {
-
-        if (arrayColumn(uniqueArray, 0).includes(entry['ts'].slice(sliceLower, sliceUpper))) {
-            ++uniqueArray[arrayColumn(uniqueArray, 0).indexOf(entry['ts'].slice(sliceLower, sliceUpper))][1];
-            return uniqueArray;
-
-        } else {
-            uniqueArray.push([entry['ts'].slice(sliceLower, sliceUpper), 1]);
-            return uniqueArray;
-        }
-    }
-
-    function cleanerNoSlice(uniqueArray, param) {
-
-        if (arrayColumn(uniqueArray, 0).includes(entry[param])) {
-            ++uniqueArray[arrayColumn(uniqueArray, 0).indexOf(entry[param])][1];
-            return uniqueArray;
-
-        } else {
-            uniqueArray.push([entry[param], 1]);
-            return uniqueArray;
-        }
-    }
-
-    for (entry of data) {
-        if (cleanerTimeAndArtist(entry)) { continue; }
-        uniqueYears = cleanerSlice(uniqueYears, 0, 4);
-        uniqueMonths = cleanerSlice(uniqueMonths, 5, 7);
-        uniqueTimes = cleanerSlice(uniqueTimes, 11, 13);
-        uniqueArtists = cleanerNoSlice(uniqueArtists, 'master_metadata_album_artist_name');
-        uniqueSongs = cleanerNoSlice(uniqueSongs, 'master_metadata_track_name');
-
-    }
-
-    //Final sorting of sub-data
-    uniqueYears = uniqueYears.sort((a, b) => a[0] - b[0]);
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    for (let i = 0; i < 12; i++) { uniqueMonths[i][0] = months[i]; }
-    uniqueTimes[0][0] = "Midnight";
-    uniqueArtists = uniqueArtists.sort((a, b) => b[1] - a[1]);
-    uniqueSongs = uniqueSongs.sort((a, b) => b[1] - a[1]);
-
-    return [uniqueArtists, uniqueSongs, uniqueYears, uniqueMonths, uniqueTimes];
-}
-
-function readFileAsText(file) {
-    return new Promise(function (resolve, reject) {
-        let fr = new FileReader();
-
-        fr.onload = function () {
-            resolve(JSON.parse(fr.result));
-        };
-
-        fr.onerror = function () {
-            reject(fr);
-        };
-
-        fr.readAsText(file);
-    });
-}
-
 function combineFiles(ev) {
 
     // stop submit button from refreshing page
     ev.preventDefault()
+
+    function readFileAsText(file) {
+        return new Promise(function (resolve, reject) {
+            let fr = new FileReader();
+
+            fr.onload = function () {
+                resolve(JSON.parse(fr.result));
+            };
+
+            fr.onerror = function () {
+                reject(fr);
+            };
+
+            fr.readAsText(file);
+        });
+    }
+
     uploadForm.style.display = 'none';
     document.getElementById('importAndProcessingHeader').style.display = 'block';
-    
+
     // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
     // let files = ev.currentTarget.files;
     let files = ev.target.uploadFile.files;
@@ -173,42 +70,110 @@ function combineFiles(ev) {
     });
 }
 
-function artistListSearch() {
-    // Declare variables
-    var input, filter, ul, li, a, i, txtValue;
-    input = document.getElementById('search');
-    filter = input.value.toUpperCase();
-    ol = document.getElementById("artistsList");
-    li = ol.getElementsByTagName('li');
-    // console.log(ol,li)
 
-    // Loop through all list items, and hide those who don't match the search query
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("input")[0];
-        // console.log(a.value)
-        txtValue = a.value//a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-            // console.log(txtValue)
-        }
-    }
+
+function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists) {
+
+    let cleanedData = dataCleaner(combinedJson, streamLengthValue, checkedArtists);
+
+    chartScript(cleanedData, truncateResults);
+
+    streamLengthAndArtistExcludeForm.style.display = 'block';
+    document.querySelector('.chart-selector-buttons').style.display = 'block';
+    document.getElementById('processingText').style.display = 'none'; 
+
 }
+
+
+
+const arrayColumn = (arr, n) => arr.map(x => x[n]);
+
+
+
+function dataCleaner(data, streamLengthValue, checkedArtists) {
+
+    let uniqueArtists = [];
+    let uniqueSongs = [];
+    let uniqueYears = [];
+    let uniqueMonths = [["01", 0], ["02", 0], ["03", 0], ["04", 0], ["05", 0], ["06", 0],
+    ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0], ["12", 0]];
+
+    let uniqueTimes = [["00", 0], ["01", 0], ["02", 0], ["03", 0], ["04", 0], ["05", 0],
+    ["06", 0], ["07", 0], ["08", 0], ["09", 0], ["10", 0], ["11", 0],
+    ["12", 0], ["13", 0], ["14", 0], ["15", 0], ["16", 0], ["17", 0],
+    ["18", 0], ["19", 0], ["20", 0], ["21", 0], ["22", 0], ["23", 0]];
+
+    function cleanerTimeAndArtist(entry) {
+        return entry["ms_played"] < streamLengthValue || entry['master_metadata_album_artist_name'] === null || checkedArtists.includes(entry['master_metadata_album_artist_name']);
+    }
+
+    function cleanerSlice(uniqueArray, sliceLower, sliceUpper) {
+
+        let currentEntry = entry['ts'].slice(sliceLower, sliceUpper);
+        if (arrayColumn(uniqueArray, 0).includes(currentEntry)) {
+            ++uniqueArray[arrayColumn(uniqueArray, 0).indexOf(currentEntry)][1];
+            return uniqueArray;
+        }
+        uniqueArray.push([currentEntry, 1]);
+        return uniqueArray;
+    }
+
+    function cleanerNoSlice(uniqueObject, param) {
+        currentSubentry = entry[param]
+        uniqueObject[currentSubentry] === undefined ? uniqueObject[currentSubentry] = 1 : ++uniqueObject[currentSubentry]
+        return uniqueObject
+    }
+
+    function dataSorter(uniqueObject) {
+        let sortedObject = [];
+        for (entry in uniqueObject) {
+            sortedObject.push([entry, uniqueObject[entry]])
+        }
+        sortedObject.sort((a, b) => b[1] - a[1])
+        return sortedObject
+    }
+
+    let startTime = performance.now();
+
+    for (entry of data) {
+
+        if (cleanerTimeAndArtist(entry)) { continue; }
+        uniqueYears = cleanerSlice(uniqueYears, 0, 4);
+        uniqueMonths = cleanerSlice(uniqueMonths, 5, 7);
+        uniqueTimes = cleanerSlice(uniqueTimes, 11, 13);
+        uniqueArtists = cleanerNoSlice(uniqueArtists, 'master_metadata_album_artist_name');
+        uniqueSongs = cleanerNoSlice(uniqueSongs, 'master_metadata_track_name');
+    }
+
+    let endTime = performance.now();
+    console.log("Processing Time: " + (endTime - startTime) / 1000 + " secs");
+
+    //Final sorting of sub-data
+    uniqueYears = uniqueYears.sort((a, b) => a[0] - b[0]);
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    for (let i = 0; i < 12; i++) { uniqueMonths[i][0] = months[i]; }
+    uniqueTimes[0][0] = "Midnight";
+    uniqueArtists = dataSorter(uniqueArtists)
+    uniqueSongs = dataSorter(uniqueSongs)
+
+    return [uniqueArtists, uniqueSongs, uniqueYears, uniqueMonths, uniqueTimes];
+}
+
+
 
 function chartScript(cleanedData, truncateResults) {
     document.getElementById('importAndProcessingHeader').style.display = 'none';
     document.querySelector('#graphsDiv').style.display = 'block';
     let maxLabelLength = 21;
     const chartIds = ["artists-chart", "songs-chart", "years-chart", "months-chart", "times-chart"];
-    
+
     for (let i = 0; i < chartIds.length; i++) {
         const chartExist = Chart.getChart(chartIds[i]); // <canvas> id
         if (chartExist != undefined)
             chartExist.destroy();
-      
+
         let myChart = document.getElementById(chartIds[i]).getContext("2d");
-    
+
 
         let chart = new Chart(myChart, {
             type: "bar",
@@ -236,7 +201,7 @@ function chartScript(cleanedData, truncateResults) {
                     y: {
                         title: {
                             display: 'true',
-                            text: chartIds[i].slice(0,-6).toUpperCase(),
+                            text: chartIds[i].slice(0, -6).toUpperCase(),
                             color: 'white'
                         },
                         ticks: {
@@ -245,21 +210,21 @@ function chartScript(cleanedData, truncateResults) {
                                 size: 12,
                                 lineHeight: 0,// chart.chartArea.height/30;
                             },
-                            callback: function(value) {
+                            callback: function (value) {
                                 if (this.getLabelForValue(value).length > maxLabelLength) {
                                     return this.getLabelForValue(value).substr(0, maxLabelLength) + "...";
-                                }   else {
+                                } else {
                                     return this.getLabelForValue(value);
                                 }
-                            }   
+                            }
                         },
-                                       
+
                     }
                 },
                 plugins: {
                     title: {
                         display: true,
-                        text:chartIds[i].toUpperCase(),
+                        text: chartIds[i].toUpperCase(),
                         color: 'white'
                     },
                     legend: {
@@ -273,11 +238,58 @@ function chartScript(cleanedData, truncateResults) {
             chart.update();
         }
 
-        if (i != 0){
+        if (i != 0) {
             document.querySelector("#" + chartIds[i]).style.display = 'none';
         }
-        // document.querySelector("#"+chartIds[i]).style.display = 'none';
+
     }
+
+}
+
+
+
+function streamLengthAndArtistsExtractor(values) {
+    values.preventDefault();
+    document.getElementById('processingText').style.display = 'inline'; 
     
-    // document.querySelector("#artists-chart").style.display = 'block';
+    setTimeout(() => {
+        let streamLengthValue = values.target[0].value*1000;
+        if (streamLengthValue == "") {streamLengthValue = 30000;}
+
+        let truncateResults = values.target[1].value;
+        if (truncateResults == "") {truncateResults = 30;}
+        
+        artists = values.target;
+        checkedArtists = [];
+        for (artist of artists) {
+            if (artist.checked == true) { checkedArtists.push(artist.value) }
+        }
+
+        cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists)
+    }, 0);
+}
+
+
+
+function artistListSearch() {
+    // Declare variables
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById('search');
+    filter = input.value.toUpperCase();
+    ol = document.getElementById("artistsList");
+    li = ol.getElementsByTagName('li');
+    // console.log(ol,li)
+
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("input")[0];
+        // console.log(a.value)
+        txtValue = a.value//a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+            // console.log(txtValue)
+        }
+    }
 }

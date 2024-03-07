@@ -275,7 +275,7 @@ a.active-nav-link{
 }
 
 .main-media {
-    min-height: 70svh;
+    min-height: 90svh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -291,6 +291,7 @@ a.active-nav-link{
     font-size: 2rem;
     /* color: rgb(221, 179, 42); */
     color: greenyellow;
+    text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black;
 }
 
 
