@@ -36,11 +36,6 @@ body {
     background-position: center left;
 }
 
-.main-spotify-stream-data {
-    margin: 2rem 1rem 1rem 1rem;
-    height: 80%;
-}
-
 .standard-nav {
     /* background: transparent; */
     background-color: rgba(0, 0, 0, 0.7);
@@ -198,6 +193,20 @@ a.active-nav-link{
     font-size: 3rem;
 }
 
+.main-spotify-stream-data {
+    margin: 2rem 1rem 1rem 1rem;
+    height: 80%;
+}
+
+.spotify-data-heading {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    text-align: center;
+    color: white;
+    text-shadow: 0 0 2px rgb(14, 14, 121), 0 0 2px rgb(14, 14, 121), 0 0 2px rgb(14, 14, 121), 0 0 2px rgb(14, 14, 121);
+}
+
 .upload {
     display: block;
     text-align: center;
@@ -205,11 +214,25 @@ a.active-nav-link{
     font-size: large;
 }
 
+.upload-files {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.upload-files input {
+    font-size: 1rem;
+}
+
 .upload p1 {
     display: block;
     margin: 3rem auto;
     text-align: start;
     max-width: 100ch;
+}
+
+.upload a {
+    color: #1DB954;
 }
 
 .artistsList {
@@ -264,7 +287,8 @@ a.active-nav-link{
     display: none;
     text-align: center;
     padding-top: 3rem;
-    color: #FFFFFF;
+    color: white;
+    text-shadow: 0 0 2px rgb(14, 14, 121), 0 0 2px rgb(14, 14, 121), 0 0 2px rgb(14, 14, 121), 0 0 2px rgb(14, 14, 121);
 }
 
 .processing-text {

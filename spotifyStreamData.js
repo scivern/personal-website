@@ -3,6 +3,9 @@ function combineFiles(ev) {
     // stop submit button from refreshing page
     ev.preventDefault()
 
+    
+
+
     function readFileAsText(file) {
         return new Promise(function (resolve, reject) {
             let fr = new FileReader();
@@ -19,16 +22,33 @@ function combineFiles(ev) {
         });
     }
 
+    let files = ev.target.uploadFile.files;
+
+    // Abort if there were no files selected
+    if (!files.length) {
+        alert("No files selected.");
+        location.reload();
+    };
+
+    //checks if files are of the accepted type (endsong_X)
+    
+    for (file of files) {
+        if (file.name.substr(0, 8) != "endsong_") {
+            alert("Only select files with prefix 'endsong_'");
+            location.reload();
+        }
+    }
+
+    document.querySelector('.spotify-data-heading').style.display = 'none';
     uploadForm.style.display = 'none';
     document.getElementById('importAndProcessingHeader').style.display = 'block';
 
     // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
     // let files = ev.currentTarget.files;
-    let files = ev.target.uploadFile.files;
+    
     let readers = [];
 
-    // Abort if there were no files selected
-    if (!files.length) return;
+    
 
     // Store promises in array
     for (let i = 0; i < files.length; i++) {
