@@ -1,4 +1,5 @@
-var redirectUri = "http://localhost:5500/spotifyUserData.html";
+// const redirectUri = "http://localhost:5500/spotifyUserData.html";
+const redirectUri = "http://georgescannell.com/spotifyUserData.html";
  
 const clientId = "69e77828294d4f13b0500d5a164f9ba7";
 
@@ -146,7 +147,7 @@ async function handleResponse(response) {
             refreshToken = response.refresh_token;
             localStorage.setItem("refreshToken", refreshToken);
         }
-        // onPageLoad();
+        onPageLoad();
     } catch (error) {
         console.log(error);
         alert(error)
