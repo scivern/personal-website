@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" , initial-scale="1.0">
+    <title>George Scannell's Personal Website</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ddfda15c1c.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="standard-body">
+
+    <header>
+        <nav class="standard-nav">
+            <ul class="menu">
+                <li class="logo"><a href="index.html">George Scannell</a></li>
+                <li class="item"><a href="gallery.html">Gallery</a></li>
+                <li class="item has-submenu">
+                    <a tabindex="0">Favourites</a>
+                    <ul class="submenu">
+                        <li class="subitem"><a href="music.html">Music</a></li>
+                        <li class="subitem"><a href="filmsAndTV.html">Films/TV</a></li>
+                        <li class="subitem"><a href="quotes.html">Quotes</a></li>
+                    </ul>
+                </li>
+                <li class="item"><a href="media.html">Media</a></li>
+                <li class="item has-submenu">
+                    <a tabindex="0">Projects</a>
+                    <ul class="submenu">
+                        <li class="subitem"><a href="spotifyStreamData.html">Spotify Stream Data</a></li>
+                    </ul>
+                </li>
+                <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+<main class="main-spotify-user-data">
+    
+
+<div id="main"></div>
+<div id="followed-artists"></div>
+<div id="saved-tracks"></div>
+<div id="oauth"></div>
+
+<template id="login">
+    <h1>Welcome to the OAuth2 PKCE Example</h1>
+    <button id="login-button" data-bind-onclick="loginWithSpotifyClick();"> Log in with Spotify </button>
+</template>
+
+<template id="logged-in-template">
+    <h1>Logged in as <span data-bind="display_name"></span></h1>
+    <img width="150" data-bind-src="images[0].url" data-bind-alt="display_name" />
+
+    <button id="refresh-token-button" data-bind-onclick="refreshTokenClick();">Refresh Token</button>
+    <button id="logout-button" data-bind-onclick="logoutClick();">Log out</button>
+</template>
+
+
+<template id="followed-artists-template">
+    <!-- <button data-bind-onclick="getFollowedArtists();">Followed Artists</button> -->
+    <p1 data-bind="artists"></p1>
+</template>
+
+<template id="saved-tracks-template">
+    <p1 data-bind="tracks[0]"></p1>
+</template>
+
+<!-- <button class="fff">fff</button> -->
+
+<template id="oauth-template">
+    <h2 class="oauth-dropdown">oAuth info</h2>
+    <!-- <div class="oauth-table"> -->
+    <table>
+        <tr>
+            <td>Access token</td>
+            <td data-bind="access_token"></td>
+        </tr>
+        <tr>
+            <td>Refresh token</td>
+            <td data-bind="refresh_token"></td>
+        </tr>
+        <tr>
+            <td>Expiration at</td>
+            <td data-bind="expires">${getExpirationDate(expires_in)}</td>
+        </tr>
+    </table>
+    <!-- </div> -->
+</template>
+    
+</main>
+<script src="/script.js"></script>
+<script src="spotifyUserData.js"></script>
+
+</body>
+
+</html>
