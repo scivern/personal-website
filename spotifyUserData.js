@@ -218,10 +218,10 @@ async function getFollowedArtists() {
     let events = []
     let followedArtistShows = {}
     userCountry = localStorage.getItem("userCountry")
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < followedTotal.length; i++) {
         response = await ticketmasterApi("https://app.ticketmaster.com/discovery/v2/events.json?&size=20&apikey=dYtFUjzPcwSQU8GRUj4hRBfDaLkOLxql& \
         radius=0&countryCode=" + userCountry + "&keyword=" + followedTotal[i])//+ "&city=" + "d" + "&radius=" + radius
-        console.log(response);
+        // console.log(response);
         await sleep(200);
         if (response._embedded == undefined) {continue}
 
@@ -236,9 +236,9 @@ async function getFollowedArtists() {
         row.insertCell(1).appendChild(document.createTextNode("City"))
         row.insertCell(2).appendChild(document.createTextNode("Date"))
         
-        events = [];
+        // events = [];
         for (event of response._embedded.events) {
-            events.push({ "Name": event.name, "Venue": event._embedded.venues[0].city.name, "Date": event.dates.start.localDate, "Url": event.url});
+            // events.push({ "Name": event.name, "Venue": event._embedded.venues[0].city.name, "Date": event.dates.start.localDate, "Url": event.url});
             row = table.insertRow();
             let a = document.createElement('a'); a.href = event.url; a.target = "_blank"; a.style = "color: white; text-decoration: none"
             a.appendChild(document.createTextNode(event.name))
@@ -251,7 +251,7 @@ async function getFollowedArtists() {
         followedArtistShows[followedTotal[i]] = events
         document.querySelector(".followed-concerts-accordions").append(table)
     }   
-    console.log(followedArtistShows);
+    // console.log(followedArtistShows);
 
     var acc = document.querySelectorAll(".accordion");
     // var i;
