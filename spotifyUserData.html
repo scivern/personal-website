@@ -8,7 +8,6 @@
     <title>George Scannell's Personal Website</title>
     <link href="style.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/ddfda15c1c.js" crossorigin="anonymous"></script>
-    
 </head>
 
 <body class="standard-body">
@@ -47,7 +46,7 @@
         <p1>The tool on this page allows you to see data about your Spotify account. Currently,
             it is capable of accessing your 'liked songs' playlist and allowing you to download said
             playlist in .csv format (as a backup or if you are moving to another streaming provider for
-            example). PLANNED => Access your followed artists and tell you if they have any shows near you
+            example). It can also ccess your followed artists and tell you if they have any shows in your country
             in the future.
         </p1>
         <button class="login-button">Login</button>
@@ -56,14 +55,21 @@
 
     <div class="logged-in">
 
-        <h1 class="login-text">Logged In as: </h1>
-
+        <div class="logged-in-logout">
+        <h1 class="logged-in-text">Logged in as: </h1>
         <button class="logout-button">Log Out</button>
+        </div>
 
         <img class="profile-pic" alt="Profile Picture"></img>
 
-        <button onclick="getSavedTracks()">Get saved tracks (takes awhile)</button>
+        <div class="download-tracks">
+        <button class="get-saved-tracks-button">Get saved tracks (takes awhile)</button>
+        </div>
 
+        <div class="followed-concerts">
+        <button class="followed-concerts-button">Upcoming shows for your followed artists</button>
+        <div class="followed-concerts-accordions"></div>
+        </div>
         
     </div>
     
@@ -72,6 +78,7 @@
 
 <script src="/script.js"></script>
 <script src="spotifyUserData.js"></script>
+
 </body>
 
 </html>

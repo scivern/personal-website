@@ -760,8 +760,12 @@ a.active-nav-link{
 
 
 .main-spotify-user-data {
-    margin: 2rem;
-    min-height: 80vh;
+    padding: 1rem;
+    height: 87svh;
+    /* height: auto; */
+    /* min-height: auto; */
+    overflow-y: auto;
+    /* overflow: hidden; */
 }
 
 .login p1 {
@@ -780,8 +784,9 @@ a.active-nav-link{
 
 .logged-in {
     display: none;
+    /* height: 80svh; */
+    min-height: auto;
 }
-
 
 .spotify-user-data-heading {
     display: flex;
@@ -808,61 +813,95 @@ a.active-nav-link{
     transition: 0.2s;
 }
 
-
-
-
-
-/* .main-spotify-user-data {
-    margin: 2rem 2rem 2rem 1rem;
-    min-height: 80vh;
+.logged-in-logout {
+    height: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: center;
 }
 
-
-
-td:first-child {
-    font-weight: bold;
+.logged-in-logout > h1,button{
+    display: inline;
 }
 
-td {
-    padding: 10px;
-    margin-right: 1rem;
+.logged-in-text {
+    margin: 0 3rem;
 }
 
-button {
-    margin: 1rem 1rem 0 0;
-    border: 0;
-    border-radius: 20px;
-    padding: 10px 3rem;
-    font-size: 0.8rem;
-    font-family: Arial, Helvetica, sans-serif;
-    text-transform: uppercase;
-    font-weight: bold;
-    background-color: #1ed760;
-    color: black;
+.logout-button {
+    margin-left: 0rem;
+    font-size: 1.5rem;
+    background-color: #1DB954;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    border: rgb(14, 14, 121);
+    cursor: pointer;
+    font-family: "Montserrat";
+    font-weight: 500;
 }
 
-button:hover {
-    background-color: #1fdf64;
+.logout-button:hover {
+    background-color: hotpink;
+    transition: 0.2s;
 }
 
-#logged-in {
+.profile-pic {
+    display: block;
+    margin: 2rem auto;
+}
+
+.download-tracks button {
+    display: block;
+    margin: 1rem auto;
+    background-color: rgb(221, 179, 42);
+    padding: 0.5rem;
+    border: black solid 2px;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.followed-concerts {
+    overflow-x: auto;
+}
+
+.followed-concerts-button {
+    display: block;
+    margin: 1rem auto;
+    background-color: rgb(221, 179, 42);
+    padding: 0.5rem;
+    border: black solid 2px;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.accordion {
+    /* background-color: #eee; */
+    background-color: transparent;
+    color: rgb(221, 179, 42);
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #fff;
+    /* border-bottom: #fff; */
+    text-align: left;
+    font-family: inherit;
+    outline: none;
+    font-size: 20px;
+    font-weight: 500;
+    transition: 0.4s;
+}
+
+.accordion-active,
+.accordion:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.panel {
+    /* padding: 0 18px; */
     display: none;
+    background-color: transparent;
+    /* overflow: hidden; */
 }
-
-.oauth,
-#oauth {
-    position: absolute;
-    bottom: 0;
-}
-
-.oauth-dropdown::after {
-    font-family: "Font Awesome 5 Free";
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 900;
-    content: "\f078";
-    color: white;
-    padding-left: 5px;
-    display: inline-block;
-    vertical-align: middle;
-} */
