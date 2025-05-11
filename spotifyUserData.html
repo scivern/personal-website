@@ -12,72 +12,73 @@
 
 <body class="standard-body">
 
-<header>
-    <nav class="standard-nav">
-        <ul class="menu">
-            <li class="logo"><a href="index.html">George Scannell</a></li>
-            <li class="item"><a href="gallery.html">Gallery</a></li>
-            <li class="item has-submenu">
-                <a tabindex="0">Favourites</a>
-                <ul class="submenu">
-                    <li class="subitem"><a href="music.html">Music</a></li>
-                    <li class="subitem"><a href="filmsAndTV.html">Films/TV</a></li>
-                </ul>
-            </li>
-            <li class="item"><a href="media.html">Media</a></li>
-            <li class="item has-submenu">
-                <a tabindex="0">Projects</a>
-                <ul class="submenu">
-                    <li class="subitem"><a href="spotifyStreamData.html">Spotify Stream Data</a></li>
-                    <li class="subitem"><a href="spotifyUserData.html" class="active-nav-link">Spotify User Data</a></li>
-                </ul>
-            </li>
-            <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
-        </ul>
-    </nav>
-</header>
+    <header>
+        <nav class="standard-nav">
+            <ul class="menu">
+                <li class="logo"><a href="index.html">George Scannell</a></li>
+                <li class="item"><a href="gallery.html">Gallery</a></li>
+                <li class="item has-submenu">
+                    <a tabindex="0">Favourites</a>
+                    <ul class="submenu">
+                        <li class="subitem"><a href="music.html">Music</a></li>
+                        <li class="subitem"><a href="filmsAndTV.html">Films/TV</a></li>
+                    </ul>
+                </li>
+                <li class="item"><a href="media.html">Media</a></li>
+                <li class="item has-submenu">
+                    <a tabindex="0">Projects</a>
+                    <ul class="submenu">
+                        <li class="subitem"><a href="spotifyStreamData.html">Spotify Stream Data</a></li>
+                        <li class="subitem"><a href="spotifyUserData.html" class="active-nav-link">Spotify User Data</a></li>
+                        <li class="subitem"><a href="barnesHutSim.html">Barnes Hut Simulation</a></li>
+                    </ul>
+                </li>
+                <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
+            </ul>
+        </nav>
+    </header>
 
 
-<main class="main-spotify-user-data">
+    <main class="main-spotify-user-data">
 
-    <div class="login">
+        <div class="login">
 
-        <h1 class="spotify-user-data-heading">Spotify User Data Tool</h1>
-        <p1>The tool on this page allows you to see data about your Spotify account. Currently,
-            it is capable of accessing your 'liked songs' playlist and allowing you to download said
-            playlist in .csv format (as a backup or if you are moving to another streaming provider for
-            example). It can also ccess your followed artists and tell you if they have any shows in your country
-            in the future.
-        </p1>
-        <button class="login-button">Login</button>
+            <h1 class="spotify-user-data-heading">Spotify User Data Tool</h1>
+            <p1>The tool on this page allows you to see data about your Spotify account. Currently,
+                it is capable of accessing your 'liked songs' playlist and allowing you to download said
+                playlist in .csv format (as a backup or if you are moving to another streaming provider for
+                example). It can also ccess your followed artists and tell you if they have any shows in your country
+                in the future.
+            </p1>
+            <button class="login-button">Login</button>
 
-    </div>
-
-    <div class="logged-in">
-
-        <div class="logged-in-logout">
-        <h1 class="logged-in-text">Logged in as: </h1>
-        <button class="logout-button">Log Out</button>
         </div>
 
-        <img class="profile-pic" alt="Profile Picture"></img>
+        <div class="logged-in">
 
-        <div class="download-tracks">
-        <button class="get-saved-tracks-button">Get saved tracks (takes awhile)</button>
+            <div class="logged-in-logout">
+                <h1 class="logged-in-text">Logged in as: </h1>
+                <button class="logout-button">Log Out</button>
+            </div>
+
+            <img class="profile-pic" alt="Profile Picture"></img>
+
+            <div class="download-tracks">
+                <button class="get-saved-tracks-button">Get saved tracks (takes awhile)</button>
+            </div>
+
+            <div class="followed-concerts">
+                <button class="followed-concerts-button">Upcoming shows for your followed artists</button>
+                <div class="followed-concerts-accordions"></div>
+            </div>
+
         </div>
 
-        <div class="followed-concerts">
-        <button class="followed-concerts-button">Upcoming shows for your followed artists</button>
-        <div class="followed-concerts-accordions"></div>
-        </div>
-        
-    </div>
-    
 
-</main>
+    </main>
 
-<script src="script.js"></script>
-<script src="spotifyUserData.js"></script>
+    <script src="script.js"></script>
+    <script src="spotifyUserData.js"></script>
 
 </body>
 

@@ -905,3 +905,13 @@ a.active-nav-link{
     background-color: transparent;
     /* overflow: hidden; */
 }
+
+.main-barnes-hut {
+    padding: 1rem;
+    height: 87svh;
+    display: flex;
+}
+
+.barnes-hut-canvas {
+    background-color: black;
+}
