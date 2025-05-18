@@ -912,6 +912,20 @@ a.active-nav-link{
     display: flex;
 }
 
+.canvas-div {
+    flex: 1;
+}
+
 .barnes-hut-canvas {
     background-color: black;
+}
+
+.barnes-hut-info {
+    flex: 1;
+}
+
+.barnes-hut-sliders {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
 }

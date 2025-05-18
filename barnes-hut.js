@@ -275,15 +275,45 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-function toggleTree() {
-    let checkBox = document.getElementById('toggleTreeCheckBox');
 
-    if (checkBox.checked == true) {
-        drawBounds = true;
-    } else {
-        drawBounds = false;
-    }
-}
+let checkBox = document.getElementById('toggleTreeCheckBox');
+checkBox.addEventListener("change", (event) => {
+    checkBox.checked ? drawBounds = true : drawBounds = false
+})
+
+const nSliderValue = document.querySelector("#nSliderValue");
+const nSlider = document.querySelector("#nSlider");
+nSliderValue.textContent = nSlider.value;
+nSlider.addEventListener("input", (event) => {
+    nSliderValue.textContent = event.target.value;
+    num = parseFloat(nSliderValue.textContent);
+});
+
+const dtSliderValue = document.querySelector("#dtSliderValue");
+const dtSlider = document.querySelector("#dtSlider");
+dtSliderValue.textContent = dtSlider.value;
+dtSlider.addEventListener("input", (event) => {
+    dtSliderValue.textContent = event.target.value;
+    dt = parseFloat(dtSliderValue.textContent);
+});
+
+const centralMassSliderValue = document.querySelector("#centralMassSliderValue");
+const centralMassSlider = document.querySelector("#centralMassSlider");
+centralMassSliderValue.textContent = centralMassSlider.value;
+centralMassSlider.addEventListener("input", (event) => {
+    centralMassSliderValue.textContent = event.target.value;
+    points[0].mass = parseFloat(centralMassSliderValue.textContent);
+});
+
+const forceScaleSliderValue = document.querySelector("#forceScaleSliderValue");
+const forceScaleSlider = document.querySelector("#forceScaleSlider");
+forceScaleSliderValue.textContent = forceScaleSlider.value;
+forceScaleSlider.addEventListener("input", (event) => {
+    forceScaleSliderValue.textContent = event.target.value;
+    forceScaling = parseFloat(forceScaleSliderValue.textContent);
+    console.log(forceScaling);
+});
+
 
 
 let canvasScale = 800;

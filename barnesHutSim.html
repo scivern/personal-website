@@ -30,7 +30,7 @@
                     <ul class="submenu">
                         <li class="subitem"><a href="spotifyStreamData.html">Spotify Stream Data</a></li>
                         <li class="subitem"><a href="spotifyUserData.html">Spotify User Data</a></li>
-                        <li class="subitem"><a href="barnesHutSim.html" class="active-nav-link">Barnes Hut Simulation</a></li>
+                        <li class="subitem"><a href="barnesHutSim.html" class="active-nav-link">Barnes-Hut Simulation</a></li>
                     </ul>
                 </li>
                 <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
@@ -40,14 +40,34 @@
 
     <main class="main-barnes-hut">
 
-    <div class="canvas-div" style="flex: 1;">
-    <canvas class="barnes-hut-canvas" id="canvas"></canvas>
+    <div class="canvas-div">
+        <canvas class="barnes-hut-canvas" id="canvas"></canvas>
     </div>
 
-    <div class="barnes-hut-info" style="flex: 1;">
-    <h1>Barnes-Hut Simulation (work in progress)</h1>
-    <input type="checkbox" id="toggleTreeCheckBox" onclick="toggleTree()">
-    <label for="toggleTreeCheckBox">Toggle Quadtree Visualisation</label>
+    <div class="barnes-hut-info">
+        <h1>Barnes-Hut Simulation (work in progress)</h1>
+        <div>
+            <input type="checkbox" id="toggleTreeCheckBox">
+            <label for="toggleTreeCheckBox">Toggle Quadtree Visualisation</label>
+        </div>
+        <div class="barnes-hut-sliders">
+            <div>
+                <input type="range" min="1" max="20000" value="5000" class="slider" id="nSlider">
+                <p>N: <output id="nSliderValue"></output></p>
+            </div>
+            <div>
+                <input type="range" min="0.001" max="0.5" value="0.05" step="0.001" class="slider" id="dtSlider">
+                <p>dt: <output id="dtSliderValue"></output></p>
+            </div>
+            <div>
+                <input type="range" min="1" max="20000" value="10000" class="slider" id="centralMassSlider">
+                <p>Central Mass: <output id="centralMassSliderValue"></output></p>
+            </div>
+            <div>
+                <input type="range" min="0.000001" max="0.0001" value="0.00001" step="0.00001" class="slider" id="forceScaleSlider">
+                <p>Force Scale: <output id="forceScaleSliderValue"></output></p>
+            </div>
+        </div>
     </div>
 
     <script src="barnes-hut.js"></script>
