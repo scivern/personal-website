@@ -275,11 +275,28 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+const playPauseSim = document.querySelector('.barnes-hut-playpause')
+playPauseSim.addEventListener("click", (event) => {
+    if (paused) {
+        dt = parseFloat(dtSliderValue.textContent);
+        playPauseSim.textContent = 'Pause';
+        paused = false;
+    } else {
+        dt = 0;
+        playPauseSim.textContent = 'Play';
+        paused = true;
+    }
+});
 
-let checkBox = document.getElementById('toggleTreeCheckBox');
-checkBox.addEventListener("change", (event) => {
-    checkBox.checked ? drawBounds = true : drawBounds = false
-})
+const resetSim = document.querySelector('.barnes-hut-reset')
+resetSim.addEventListener("click", (event) => {
+    points = initializeParticles(center, largeMass)
+});
+
+const quadtreeCheckBox = document.getElementById('toggleTreeCheckBox');
+quadtreeCheckBox.addEventListener("change", (event) => {
+    quadtreeCheckBox.checked ? drawBounds = true : drawBounds = false
+});
 
 const nSliderValue = document.querySelector("#nSliderValue");
 const nSlider = document.querySelector("#nSlider");
@@ -315,7 +332,6 @@ forceScaleSlider.addEventListener("input", (event) => {
 });
 
 
-
 let canvasScale = 800;
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -347,9 +363,10 @@ let qtWidth = 0.5;
 let qtHeight = 0.5;
 
 let drawBounds = false;
+let paused = false;
 
 points = initializeParticles(center, largeMass);
 
 animate();
 
-console.log(quadtree);
+console.log(quadtree); console.log(dt, dtSliderValue.textContent);
