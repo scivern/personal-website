@@ -1,10 +1,7 @@
 function combineFiles(ev) {
 
-    // stop submit button from refreshing page
+    // Stop submit button from refreshing page
     ev.preventDefault()
-
-    
-
 
     function readFileAsText(file) {
         return new Promise(function (resolve, reject) {
@@ -30,10 +27,10 @@ function combineFiles(ev) {
         location.reload();
     };
 
-    //checks if files are of the accepted type (endsong_X)
-    
+    // Checks if files are of the accepted type (endsong_X)
     for (file of files) {
-        if (file.name.substr(0, 8) != "endsong_") {
+        // if (file.name.substr(0, 8) != "endsong_") {
+        if (file.name.substr(0, 24) != "Streaming_History_Audio_") {
             alert("Only select files with prefix 'endsong_'");
             location.reload();
         }
@@ -144,6 +141,18 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
         return uniqueObject
     }
 
+    function cleanerNoSliceSongs(uniqueObject, param) {
+        currentSubentry = entry[param]
+        if (uniqueObject[currentSubentry] === undefined) {
+            uniqueObject[currentSubentry] = { "Artist": entry['master_metadata_album_artist_name'], "Streams": 1}
+        } else {
+            uniqueObject[currentSubentry]["Streams"] += 1
+        }
+        // uniqueObject[currentSubentry] === undefined ? uniqueObject[currentSubentry] = {
+        //     "Track Name":entry['master_metadata_track_name'], "Streams":1} : ++uniqueObject[currentSubentry].Streams
+        return uniqueObject
+    }
+
     function dataSorter(uniqueObject) {
         let sortedObject = [];
         for (entry in uniqueObject) {
@@ -152,6 +161,16 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
         sortedObject.sort((a, b) => b[1] - a[1])
         return sortedObject
     }
+
+    function dataSorterSongs(uniqueObject) {
+        let sortedObject = [];
+        for (entry in uniqueObject) {
+            sortedObject.push([entry, uniqueObject[entry]["Artist"], uniqueObject[entry]["Streams"]])
+        }
+        sortedObject.sort((a, b) => b[2] - a[2]);
+        return sortedObject
+    }
+
 
     let startTime = performance.now();
 
@@ -162,7 +181,7 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
         uniqueMonths = cleanerSlice(uniqueMonths, 5, 7);
         uniqueTimes = cleanerSlice(uniqueTimes, 11, 13);
         uniqueArtists = cleanerNoSlice(uniqueArtists, 'master_metadata_album_artist_name');
-        uniqueSongs = cleanerNoSlice(uniqueSongs, 'master_metadata_track_name');
+        uniqueSongs = cleanerNoSliceSongs(uniqueSongs, 'master_metadata_track_name');
     }
 
     let endTime = performance.now();
@@ -174,10 +193,11 @@ function dataCleaner(data, streamLengthValue, checkedArtists) {
     for (let i = 0; i < 12; i++) { uniqueMonths[i][0] = months[i]; }
     uniqueTimes[0][0] = "Midnight";
     uniqueArtists = dataSorter(uniqueArtists)
-    uniqueSongs = dataSorter(uniqueSongs)
+    uniqueSongs = dataSorterSongs(uniqueSongs)
 
     return [uniqueArtists, uniqueSongs, uniqueYears, uniqueMonths, uniqueTimes];
 }
+
 
 
 
@@ -186,26 +206,25 @@ function chartScript(cleanedData, truncateResults) {
     document.querySelector('#graphsDiv').style.display = 'block';
     let maxLabelLength = 21;
     const chartIds = ["artists-chart", "songs-chart", "years-chart", "months-chart", "times-chart"];
-
     for (let i = 0; i < chartIds.length; i++) {
         const chartExist = Chart.getChart(chartIds[i]); // <canvas> id
         if (chartExist != undefined)
             chartExist.destroy();
 
+        let toolTipLabels = arrayColumn(cleanedData[i], 1).slice(0, truncateResults);
+
         let myChart = document.getElementById(chartIds[i]).getContext("2d");
-
-
         let chart = new Chart(myChart, {
             type: "bar",
             data: {
                 labels: arrayColumn(cleanedData[i], 0).slice(0, truncateResults),
                 datasets: [{
-                    data: arrayColumn(cleanedData[i], 1).slice(0, truncateResults)
+                    data: i == 1 ? arrayColumn(cleanedData[i], 2).slice(0, truncateResults) : arrayColumn(cleanedData[i], 1).slice(0, truncateResults)
                 }],
             },
             options: {
                 maintainAspectRatio: false,
-                indexAxis: 'y',
+                indexAxis: i < 2 ? 'y' : 'x',
                 responsive: true,
                 scales: {
                     x: {
@@ -249,7 +268,29 @@ function chartScript(cleanedData, truncateResults) {
                     },
                     legend: {
                         display: false,
-                    }
+                    },
+                    tooltip: {
+                        intersect: false,
+                        callbacks: {
+                            title: (toolTipItem) => {
+                                let title = toolTipItem[0].label;
+                                return title;
+                            },
+                            label: (toolTipItem) => {
+                                let label = toolTipItem.formattedValue
+                                label == 0 ? label = "0" : label
+                                return label;
+                            },
+                            footer: (toolTipItem) => {
+                                let afterTitle;
+                                if (i == 1) {
+                                    afterTitle = toolTipLabels[toolTipItem[0].dataIndex];
+                                }
+                                return afterTitle;
+                            },
+                        },
+                        titleColor: "#DDB32A"
+                    },
                 }
             }
         });
@@ -293,7 +334,7 @@ function streamLengthAndArtistsExtractor(values) {
 
 function artistListSearch() {
     // Declare variables
-    var input, filter, ul, li, a, i, txtValue;
+    let input, filter, li, a, i, txtValue;
     input = document.getElementById('search');
     filter = input.value.toUpperCase();
     ol = document.getElementById("artistsList");
