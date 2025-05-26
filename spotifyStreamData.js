@@ -1,72 +1,103 @@
 function combineFiles(ev) {
 
+
+    
+
     // Stop submit button from refreshing page
     ev.preventDefault()
+    if (!document.getElementById('exampleFileCheckbox').checked) {
 
-    function readFileAsText(file) {
-        return new Promise(function (resolve, reject) {
-            let fr = new FileReader();
+        function readFileAsText(file) {
+            return new Promise(function (resolve, reject) {
+                let fr = new FileReader();
 
-            fr.onload = function () {
-                resolve(JSON.parse(fr.result));
-            };
+                fr.onload = function () {
+                    resolve(JSON.parse(fr.result));
+                };
 
-            fr.onerror = function () {
-                reject(fr);
-            };
+                fr.onerror = function () {
+                    reject(fr);
+                };
 
-            fr.readAsText(file);
-        });
-    }
+                fr.readAsText(file);
+            });
+        }
 
-    let files = ev.target.uploadFile.files;
-
-    // Abort if there were no files selected
-    if (!files.length) {
-        alert("No files selected.");
-        location.reload();
-    };
-
-    // Checks if files are of the accepted type (endsong_X)
-    for (file of files) {
-        // if (file.name.substr(0, 8) != "endsong_") {
-        if (file.name.substr(0, 24) != "Streaming_History_Audio_") {
-            alert("Only select files with prefix 'endsong_'");
+        let directoryFiles = ev.target.uploadFile.files;
+        // Abort if there were no files selected
+        if (!directoryFiles.length) {
+            alert("No files selected.");
             location.reload();
+        };
+
+        let files = [];
+
+        // Checks if files are of the accepted type (Streaming_History_Audio_X)
+        for (file of directoryFiles) {
+            if (file.name.substr(0, 24) == "Streaming_History_Audio_") {
+                files.push(file)
+            }
         }
-    }
 
-    document.querySelector('.spotify-data-heading').style.display = 'none';
-    uploadForm.style.display = 'none';
-    document.getElementById('importAndProcessingHeader').style.display = 'block';
+        document.querySelector('.spotify-data-heading').style.display = 'none';
+        uploadForm.style.display = 'none';
+        document.getElementById('importAndProcessingHeader').style.display = 'block';
 
-    // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
-    // let files = ev.currentTarget.files;
-    
-    let readers = [];
+        // if (typeof graph == 'undefined') {console.log("df");graph.destroy();}
+        // let files = ev.currentTarget.files;
+        
+        let readers = [];
 
-    
+        
 
-    // Store promises in array
-    for (let i = 0; i < files.length; i++) {
-        readers.push(readFileAsText(files[i]));
-    }
-
-    // Trigger Promises
-    Promise.all(readers).then((values) => {
-        // Values will be an array that contains an item
-        // with the text of every selected file
-        // ["File1 Content", "File2 Content" ... "FileN Content"]
-        combinedJson = [];
-        for (let i = 0; i < values.length; i++) {
-            combinedJson = combinedJson.concat(values[i])
-            // console.log(document.getElementById('importProgress'))
-            // document.getElementById('importProgress').value = values.length/i *100;
+        // Store promises in array
+        for (let i = 0; i < files.length; i++) {
+            readers.push(readFileAsText(files[i]));
         }
-        console.log("Files Uploaded and Combined");
+
+        // Trigger Promises
+        Promise.all(readers).then((values) => {
+            // Values will be an array that contains an item
+            // with the text of every selected file
+            // ["File1 Content", "File2 Content" ... "FileN Content"]
+            combinedJson = [];
+            for (let i = 0; i < values.length; i++) {
+                combinedJson = combinedJson.concat(values[i])
+                // console.log(document.getElementById('importProgress'))
+                // document.getElementById('importProgress').value = values.length/i *100;
+            }
+            console.log("Files Uploaded and Combined");
+
+            uniqueArtistsCheckbox = [];
+            for (entry of combinedJson) {
+                if (!uniqueArtistsCheckbox.includes(entry['master_metadata_album_artist_name'])) {
+                    uniqueArtistsCheckbox.push(entry['master_metadata_album_artist_name']);
+                }
+            }
+            uniqueArtistsCheckbox.sort(Intl.Collator().compare);
+
+            let result = "";
+            uniqueArtistsCheckbox.forEach(function (item) {
+                result += "<li><input style='margin-right: 0.3rem;' type='checkbox' id='" + item + "' value='" + item + "'>" + item + "</li>";
+            })
+            document.getElementById("artistsList").innerHTML = result;
+
+            let streamLengthValue = 30000;
+            let truncateResults = 30;
+            let checkedArtists = [];
+            
+            cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists);
+
+        });
+    } else {
+        document.querySelector('.spotify-data-heading').style.display = 'none';
+        uploadForm.style.display = 'none';
+        document.getElementById('importAndProcessingHeader').style.display = 'block';
+
+        const randomJSON = generateRandomJSON(1000);
 
         uniqueArtistsCheckbox = [];
-        for (entry of combinedJson) {
+        for (entry of randomJSON) {
             if (!uniqueArtistsCheckbox.includes(entry['master_metadata_album_artist_name'])) {
                 uniqueArtistsCheckbox.push(entry['master_metadata_album_artist_name']);
             }
@@ -82,11 +113,34 @@ function combineFiles(ev) {
         let streamLengthValue = 30000;
         let truncateResults = 30;
         let checkedArtists = [];
-        cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists);
 
-    });
+        cleaningAndDisplaying(randomJSON, streamLengthValue, truncateResults, checkedArtists);
+    }
 }
 
+
+function generateRandomJSON(size) {
+    function randomDate(start, end) {
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString()
+    }
+
+    let randomJSON = []
+    for (let i = 0; i < size; i++) {
+        const randomTrack = `Song ${Math.floor(Math.random() * (50 - 1 + 1))}`;
+        const randomArtist = `Song ${Math.floor(Math.random() * (50 - 1 + 1))}`;
+        const randomDatetime = randomDate(new Date(2014, 0, 1), new Date())
+
+        randomJSON.push(
+            {
+                "master_metadata_track_name":randomTrack,
+                "master_metadata_album_artist_name": randomArtist,
+                "ts": randomDatetime
+            }
+        )
+    }
+
+    return randomJSON
+}
 
 
 function cleaningAndDisplaying(combinedJson, streamLengthValue, truncateResults, checkedArtists) {

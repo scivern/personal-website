@@ -225,6 +225,10 @@ a.active-nav-link{
     font-family: inherit;
 }
 
+.upload-files label {
+    padding-right: 3rem;
+} 
+
 .upload p1 {
     display: block;
     margin: 3rem auto;
