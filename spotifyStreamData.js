@@ -1,11 +1,9 @@
 function combineFiles(ev) {
 
-
-    
-
     // Stop submit button from refreshing page
     ev.preventDefault()
     if (!document.getElementById('exampleFileCheckbox').checked) {
+        console.log(3);
 
         function readFileAsText(file) {
             return new Promise(function (resolve, reject) {
