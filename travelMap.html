@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" , initial-scale="1.0">
+    <title>George Scannell's Personal Website</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ddfda15c1c.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+
+<body class="grey-body">
+
+    <header>
+        <nav class="standard-nav nav-space-background">
+            <ul class="menu">
+                <li class="logo"><a href="index.html">George Scannell</a></li>
+                <li class="item"><a href="gallery.html" class="active-nav-link">Gallery</a></li>
+                <li class="item has-submenu">
+                    <a tabindex="0">Favourites</a>
+                    <ul class="submenu">
+                        <li class="subitem"><a href="music.html">Music</a></li>
+                        <li class="subitem"><a href="filmsAndTV.html">Films/TV</a></li>
+                    </ul>
+                </li>
+                <li class="item"><a href="media.html">Media</a></li>
+                <li class="item has-submenu">
+                    <a tabindex="0">Projects</a>
+                    <ul class="submenu">
+                        <li class="subitem"><a href="spotifyStreamData.html">Spotify Data</a></li>
+                        <li class="subitem"><a href="spotifyUserData.html">Spotify User Data</a></li>
+                        <li class="subitem"><a href="barnesHutSim.html">Barnes-Hut Simulation</a></li>
+                    </ul>
+                </li>
+                <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main style="display: flex;
+  justify-content: center;
+  align-items: center; margin-top: 1rem;">
+
+        <div style="height: 80vh; width: 80vw;" id="map"></div>
+        <script type="module">
+
+            fetch('./geoJson.json')
+                .then(response => response.json())
+                .then(data => {
+                    // console.log(data);
+                
+
+            var map = L.map('map').setView([51.6205, 0.3072], 7);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+    
+            L.geoJSON(data, {
+                    style: function (feature) {
+                        return { color: feature.properties.color };
+                    }
+                }).bindPopup(function (layer) {
+                    return layer.feature.properties.description;
+                }).addTo(map);
+
+                const latlngs = data.features.map(feature => [feature.geometry.coordinates[1], feature.geometry.coordinates[0]]);
+                L.polyline(latlngs, {
+                    color: 'red'
+                }).addTo(map);
+            });
+        </script>
+    </main>
+
+</body>
+
+<script src="script.js"></script>
+
+</html>
