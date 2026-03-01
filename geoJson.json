@@ -1,0 +1,53 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [0.3072, 51.6205]
+    },
+      "properties": {
+        "name": "Brentwood",
+        "color": "#ffff00",
+        "description": "Brentwood"
+    }
+  },
+
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        0.1276,
+        51.5072
+      ]
+    },
+    "properties": {
+      "name": "London",
+      "color": "#ffff00",
+      "description": "London"
+    }
+  },
+
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        1.8613,
+        50.9516
+      ]
+    },
+    "properties": {
+      "name": "Calais",
+      "color": "#ffff00",
+      "description": "Calais"
+    }
+  }
+  
+
+
+
+]
+}
