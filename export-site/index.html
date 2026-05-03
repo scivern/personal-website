@@ -222,10 +222,22 @@ function renderStats() {
       <div class="stat-label">${label}</div>
     </div>`;
 
-  const chart = legsWithDist.length > 1 ? `
+  const chart = `
     <div class="chart-section">
       <p class="chart-label" style="margin-bottom:12px;">Cumulative distance</p>
       <div class="chart-canvas-wrap"><canvas id="pace-chart"></canvas></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-header">
+        <p class="chart-label">Distance by date</p>
+        <div class="period-toggle">
+          <button onclick="setChartPeriod('day')" id="p-day" class="period-btn">Day</button>
+          <button onclick="setChartPeriod('week')" id="p-week" class="period-btn">Week</button>
+          <button onclick="setChartPeriod('month')" id="p-month" class="period-btn active">Month</button>
+        </div>
+      </div>
+      <div class="chart-canvas-wrap"><canvas id="period-chart"></canvas></div>
     </div>
 
     ${legsWithDist.length > 0 ? `
@@ -233,7 +245,7 @@ function renderStats() {
       <p class="chart-label" style="margin-bottom:12px;">Distance per leg</p>
       <div class="chart-canvas-wrap"><canvas id="leg-chart"></canvas></div>
     </div>` : ''}
-  ` : '';
+  `;
 
   const panel = document.getElementById('panel');
   panel.innerHTML = `
@@ -275,7 +287,7 @@ function renderStats() {
   `;
 
   // Init chart after DOM is set
-  requestAnimationFrame(() => { initChart(); initLegChart(); });
+  requestAnimationFrame(() => { initChart(); initPeriodChart(currentPeriod); initLegChart(); });
 }
 
 // ── Chart ─────────────────────────────────────────────────────────────────────
@@ -339,6 +351,81 @@ function initChart() {
       }
     }
   });
+}
+
+let periodChart = null;
+let currentPeriod = 'month';
+function initPeriodChart(period) {
+  const canvas = document.getElementById('period-chart');
+  if (!canvas) return;
+  if (periodChart) { periodChart.destroy(); periodChart = null; }
+  const legs = waypoints.filter(w => w.distanceFromPrevKm > 0);
+  const buckets = {};
+  legs.forEach(w => {
+    const d = new Date(w.visitedAt);
+    let key;
+    if (period === 'day') key = d.toISOString().slice(0, 10);
+    else if (period === 'week') {
+      const jan1 = new Date(d.getFullYear(), 0, 1);
+      const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+      key = `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+    } else key = d.toISOString().slice(0, 7);
+    buckets[key] = (buckets[key] ?? 0) + w.distanceFromPrevKm;
+  });
+  const entries = Object.entries(buckets).sort(([a], [b]) => a.localeCompare(b));
+  const labels = entries.map(([k]) => {
+    if (period === 'day') return new Date(k).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    if (period === 'week') return k.replace(/^\d{4}-/, '');
+    const [y, m] = k.split('-');
+    return new Date(Number(y), Number(m) - 1).toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+  });
+  const values = entries.map(([, v]) => v);
+  periodChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        borderColor: '#d97706',
+        borderWidth: 2,
+        pointBackgroundColor: '#d97706',
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0.25,
+        fill: true,
+        backgroundColor: 'rgba(217,119,6,0.08)',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => `${ctx.parsed.y.toLocaleString()} km` },
+          backgroundColor: '#fff',
+          titleColor: '#111827',
+          bodyColor: '#6b7280',
+          borderColor: '#e5e7eb',
+          borderWidth: 1,
+          padding: 10,
+          cornerRadius: 8,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
+        y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 }, callback: v => v + ' km' }, border: { display: false } }
+      }
+    }
+  });
+}
+
+function setChartPeriod(period) {
+  currentPeriod = period;
+  ['day', 'week', 'month'].forEach(p => {
+    document.getElementById('p-' + p)?.classList.toggle('active', p === period);
+  });
+  initPeriodChart(period);
 }
 
 let legChart = null;
