@@ -310,12 +310,14 @@ function initChart() {
         km: running,
       };
     });
+  const labels = points.map(p => p.label);
 
   paceChart = new Chart(canvas, {
     type: 'line',
     data: {
+      labels,
       datasets: [{
-        data: points.map(p => ({ x: p.x, y: p.km })),
+        data: points.map(p => p.km),
         borderColor: '#d97706',
         borderWidth: 2,
         pointBackgroundColor: '#d97706',
@@ -346,7 +348,7 @@ function initChart() {
         }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
+        x: { type: 'category', grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
         y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 }, callback: v => v + ' km' }, border: { display: false } }
       }
     }
