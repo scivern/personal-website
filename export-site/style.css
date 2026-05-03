@@ -16,7 +16,7 @@
   --gray-800: #1f2937;
   --gray-900: #111827;
   --white: #ffffff;
-  --serif: 'Fraunces', Georgia, serif;
+  --serif: 'Fraunces', Georgia, #serif;
   --sans: 'Inter', system-ui, sans-serif;
   --radius: 0.75rem;
   --shadow: 0 4px 16px rgba(0,0,0,0.10);
@@ -153,17 +153,6 @@ html, body { height: 100%; font-family: var(--sans); background: #f0ebe3; color:
 .country-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .country-tag { font-size: 0.75rem; background: var(--gray-100); color: var(--gray-700); padding: 4px 10px; border-radius: 999px; font-weight: 500; }
 
-/* ── Admin link ── */
-#admin-link {
-  position: fixed; bottom: 14px; right: 14px; z-index: 500;
-  font-size: 0.72rem; font-weight: 500; color: var(--gray-400);
-  text-decoration: none; background: rgba(255,255,255,0.85);
-  padding: 5px 10px; border-radius: 20px;
-  border: 1px solid var(--gray-200);
-  backdrop-filter: blur(4px);
-  transition: color 0.15s;
-}
-#admin-link:hover { color: var(--amber); }
 
 /* ── Leaflet popup overrides ── */
 .leaflet-popup-content-wrapper { border-radius: 10px !important; box-shadow: var(--shadow) !important; }
