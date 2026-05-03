@@ -1,16 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "London, UK",
-    "description": "Day 1 — The journey begins! Rolled out of London on a crisp morning, heart hammering with excitement and nerves. The city slowly gave way to the Surrey Hills. Everything felt surreal.",
-    "lat": 51.5074,
-    "lng": -0.1278,
-    "country": "United Kingdom",
-    "distanceFromPrevKm": null,
-    "visitedAt": "2024-03-15T08:00:00.000Z",
-    "photos": []
-  },
-  {
     "id": 3,
     "title": "Paris, France",
     "description": "Cycled through the French countryside and arrived in Paris in the evening. The Eiffel Tower lit up at night as I rolled into the city. Croissants for dinner — absolutely earned.",
@@ -30,6 +19,17 @@
     "country": "France",
     "distanceFromPrevKm": 460,
     "visitedAt": "2024-03-27T16:00:00.000Z",
+    "photos": []
+  },
+  {
+    "id": 1,
+    "title": "London, UK",
+    "description": "Day 1 — The journey begins! Rolled out of London on a crisp morning, heart hammering with excitement and nerves. The city slowly gave way to the Surrey Hills. Everything felt surreal.",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "country": "United Kingdom",
+    "distanceFromPrevKm": null,
+    "visitedAt": "2024-03-15T08:00:00.000Z",
     "photos": []
   },
   {
