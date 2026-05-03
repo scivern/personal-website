@@ -22,6 +22,17 @@
     "photos": []
   },
   {
+    "id": 4,
+    "title": "Lyon, France",
+    "visitedAt": "2024-03-27T00:00:00.000Z",
+    "country": "FranceD",
+    "lat": 45.764,
+    "lng": 4.8357,
+    "distanceFromPrevKm": 460,
+    "description": "The Rhône valley opened up beautifully today. Long descents through vineyards, warmth in the air. Lyon is stunning — old stone and the two rivers meeting.",
+    "photos": []
+  },
+  {
     "id": 3,
     "title": "Paris, France",
     "description": "Cycled through the French countryside and arrived in Paris in the evening. The Eiffel Tower lit up at night as I rolled into the city. Croissants for dinner — absolutely earned.",
@@ -30,17 +41,6 @@
     "country": "France",
     "distanceFromPrevKm": 395,
     "visitedAt": "2024-03-20T19:00:00.000Z",
-    "photos": []
-  },
-  {
-    "id": 4,
-    "title": "Lyon, France",
-    "description": "The Rhône valley opened up beautifully today. Long descents through vineyards, warmth in the air. Lyon is stunning — old stone and the two rivers meeting.",
-    "lat": 45.764,
-    "lng": 4.8357,
-    "country": "France",
-    "distanceFromPrevKm": 460,
-    "visitedAt": "2024-03-27T16:00:00.000Z",
     "photos": []
   },
   {
