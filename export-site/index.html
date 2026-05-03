@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -221,35 +222,64 @@ function renderStats() {
       <div class="stat-label">${label}</div>
     </div>`;
 
-  // Distance-per-leg bar chart
-  const chartLegs = wps.filter(w => w.distanceFromPrevKm > 0);
-  const maxDist = Math.max(...chartLegs.map(w => w.distanceFromPrevKm), 1);
-  const barH = 80;
-  const barW = 28;
-  const gap = 10;
-  const chartW = chartLegs.length * (barW + gap);
+  // Chart data helpers
+  const legsWithDist = wps.filter(w => w.distanceFromPrevKm > 0);
+  const maxLegKm = Math.max(...legsWithDist.map(w => w.distanceFromPrevKm), 1);
 
-  const chart = chartLegs.length > 1 ? `
+  function buildChartData(period) {
+    const buckets = {};
+    legsWithDist.forEach(w => {
+      const d = new Date(w.visitedAt);
+      let key;
+      if (period === 'day') key = d.toISOString().slice(0, 10);
+      else if (period === 'week') {
+        const jan1 = new Date(d.getFullYear(), 0, 1);
+        const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+        key = `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+      } else key = d.toISOString().slice(0, 7);
+      buckets[key] = (buckets[key] ?? 0) + w.distanceFromPrevKm;
+    });
+    const entries = Object.entries(buckets).sort(([a], [b]) => a.localeCompare(b));
+    return {
+      labels: entries.map(([k]) => {
+        if (period === 'day') return new Date(k).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        if (period === 'week') return k.replace(/^\d{4}-/, '');
+        const [y, m] = k.split('-');
+        return new Date(Number(y), Number(m) - 1).toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+      }),
+      values: entries.map(([, v]) => v),
+    };
+  }
+
+  const chart = legsWithDist.length > 0 ? `
     <div class="chart-section">
-      <p class="chart-label">Distance per leg (km)</p>
-      <div class="chart-scroll">
-        <svg width="${chartW}" height="${barH + 36}" style="display:block;">
-          ${chartLegs.map((w, i) => {
-            const h = Math.max(4, Math.round((w.distanceFromPrevKm / maxDist) * barH));
-            const x = i * (barW + gap);
-            const y = barH - h;
-            const short = w.title.split(',')[0].slice(0, 8);
-            return `
-              <g>
-                <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="#b45309" opacity="0.85"/>
-                <text x="${x + barW / 2}" y="${y - 4}" text-anchor="middle" font-size="9" fill="#6b7280">${w.distanceFromPrevKm}</text>
-                <text x="${x + barW / 2}" y="${barH + 14}" text-anchor="middle" font-size="9" fill="#6b7280">${short}</text>
-              </g>`;
-          }).join('')}
-          <line x1="0" y1="${barH}" x2="${chartW}" y2="${barH}" stroke="#e5e7eb" stroke-width="1"/>
-        </svg>
+      <div class="chart-header">
+        <p class="chart-label">km per period</p>
+        <div class="period-toggle">
+          <button onclick="setChartPeriod('day')" id="p-day" class="period-btn">Day</button>
+          <button onclick="setChartPeriod('week')" id="p-week" class="period-btn">Week</button>
+          <button onclick="setChartPeriod('month')" id="p-month" class="period-btn active">Month</button>
+        </div>
       </div>
+      <canvas id="pace-chart" height="160"></canvas>
     </div>
+
+    ${legsWithDist.length > 0 ? `
+    <div class="chart-section">
+      <p class="chart-label" style="margin-bottom:10px;">Distance per leg</p>
+      <div class="leg-bars">
+        ${legsWithDist.map(w => `
+          <div class="leg-row">
+            <div class="leg-meta">
+              <span class="leg-title">${w.title}</span>
+              <span class="leg-km">${w.distanceFromPrevKm} km</span>
+            </div>
+            <div class="leg-track">
+              <div class="leg-fill" style="width:${Math.round((w.distanceFromPrevKm / maxLegKm) * 100)}%"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>` : ''}
   ` : '';
 
   const panel = document.getElementById('panel');
@@ -290,6 +320,87 @@ function renderStats() {
       ` : ''}
     </div>
   `;
+
+  // Init chart after DOM is set
+  requestAnimationFrame(() => initChart(currentPeriod));
+}
+
+// ── Chart ─────────────────────────────────────────────────────────────────────
+let paceChart = null;
+let currentPeriod = 'month';
+
+function initChart(period) {
+  const canvas = document.getElementById('pace-chart');
+  if (!canvas) return;
+  if (paceChart) { paceChart.destroy(); paceChart = null; }
+
+  const legsWithDist = waypoints.filter(w => w.distanceFromPrevKm > 0);
+  const buckets = {};
+  legsWithDist.forEach(w => {
+    const d = new Date(w.visitedAt);
+    let key;
+    if (period === 'day') key = d.toISOString().slice(0, 10);
+    else if (period === 'week') {
+      const jan1 = new Date(d.getFullYear(), 0, 1);
+      const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+      key = `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+    } else key = d.toISOString().slice(0, 7);
+    buckets[key] = (buckets[key] ?? 0) + w.distanceFromPrevKm;
+  });
+  const entries = Object.entries(buckets).sort(([a], [b]) => a.localeCompare(b));
+  const labels = entries.map(([k]) => {
+    if (period === 'day') return new Date(k).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    if (period === 'week') return k.replace(/^\d{4}-/, '');
+    const [y, m] = k.split('-');
+    return new Date(Number(y), Number(m) - 1).toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+  });
+  const values = entries.map(([, v]) => v);
+
+  paceChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        borderColor: '#d97706',
+        borderWidth: 2,
+        pointBackgroundColor: '#d97706',
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        tension: 0,
+        fill: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => `${ctx.parsed.y} km` },
+          backgroundColor: '#fff',
+          titleColor: '#374151',
+          bodyColor: '#374151',
+          borderColor: '#e5e7eb',
+          borderWidth: 1,
+          padding: 8,
+          cornerRadius: 8,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 } }, border: { display: false } },
+        y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 } }, border: { display: false } }
+      }
+    }
+  });
+}
+
+function setChartPeriod(period) {
+  currentPeriod = period;
+  ['day', 'week', 'month'].forEach(p => {
+    document.getElementById('p-' + p)?.classList.toggle('active', p === period);
+  });
+  initChart(period);
 }
 
 // ── SVG Icons ─────────────────────────────────────────────────────────────────
