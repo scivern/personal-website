@@ -304,6 +304,7 @@ function initChart() {
     .map(w => {
       running += w.distanceFromPrevKm;
       return {
+        x: new Date(w.visitedAt),
         label: new Date(w.visitedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }),
         title: w.title.split(',')[0],
         km: running,
@@ -313,9 +314,8 @@ function initChart() {
   paceChart = new Chart(canvas, {
     type: 'line',
     data: {
-      labels: points.map(p => p.title),
       datasets: [{
-        data: points.map(p => p.km),
+        data: points.map(p => ({ x: p.x, y: p.km })),
         borderColor: '#d97706',
         borderWidth: 2,
         pointBackgroundColor: '#d97706',
@@ -346,7 +346,7 @@ function initChart() {
         }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
+        x: { type: 'time', time: { unit: 'day' }, grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
         y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 }, callback: v => v + ' km' }, border: { display: false } }
       }
     }
@@ -360,32 +360,35 @@ function initPeriodChart(period) {
   if (!canvas) return;
   if (periodChart) { periodChart.destroy(); periodChart = null; }
   const legs = waypoints.filter(w => w.distanceFromPrevKm > 0);
-  const buckets = {};
+  const buckets = new Map();
   legs.forEach(w => {
     const d = new Date(w.visitedAt);
     let key;
-    if (period === 'day') key = d.toISOString().slice(0, 10);
-    else if (period === 'week') {
+    let label;
+    if (period === 'day') {
+      key = d.toISOString().slice(0, 10);
+      label = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    } else if (period === 'week') {
       const jan1 = new Date(d.getFullYear(), 0, 1);
       const week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
       key = `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
-    } else key = d.toISOString().slice(0, 7);
-    buckets[key] = (buckets[key] ?? 0) + w.distanceFromPrevKm;
+      label = key.replace(/^\d{4}-/, '');
+    } else {
+      key = d.toISOString().slice(0, 7);
+      label = d.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
+    }
+    const current = buckets.get(key) ?? { value: 0, label, x: d };
+    current.value += w.distanceFromPrevKm;
+    buckets.set(key, current);
   });
-  const entries = Object.entries(buckets).sort(([a], [b]) => a.localeCompare(b));
-  const labels = entries.map(([k]) => {
-    if (period === 'day') return new Date(k).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-    if (period === 'week') return k.replace(/^\d{4}-/, '');
-    const [y, m] = k.split('-');
-    return new Date(Number(y), Number(m) - 1).toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
-  });
-  const values = entries.map(([, v]) => v);
+  const entries = [...buckets.values()].sort((a, b) => a.x - b.x);
   periodChart = new Chart(canvas, {
     type: 'line',
     data: {
-      labels,
       datasets: [{
-        data: values,
+        data: period === 'day'
+          ? entries.map(p => ({ x: p.x, y: p.value }))
+          : entries.map(p => ({ x: p.label, y: p.value })),
         borderColor: '#d97706',
         borderWidth: 2,
         pointBackgroundColor: '#d97706',
@@ -413,7 +416,9 @@ function initPeriodChart(period) {
         }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
+        x: period === 'day'
+          ? { type: 'time', time: { unit: 'day' }, grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } }
+          : { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
         y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 }, callback: v => v + ' km' }, border: { display: false } }
       }
     }
