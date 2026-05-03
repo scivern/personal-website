@@ -234,7 +234,7 @@ function renderStats() {
           <button onclick="setChartPeriod('month')" id="p-month" class="period-btn active">Month</button>
         </div>
       </div>
-      <canvas id="pace-chart" height="160"></canvas>
+      <div class="chart-canvas-wrap"><canvas id="pace-chart"></canvas></div>
     </div>
 
     ${legsWithDist.length > 0 ? `
