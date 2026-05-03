@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scanjourney Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Admin-specific styles ───────────────────────────────────────────── */
+    :root {
+      --amber: #b45309;
+      --amber-light: #fef3c7;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --blue: #2563eb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; color: #111827; min-height: 100vh; }
+
+    /* Lock screen */
+    #lock-screen {
+      position: fixed; inset: 0; background: #111827;
+      display: flex; align-items: center; justify-content: center; z-index: 999;
+    }
+    .lock-box {
+      background: #1f2937; border-radius: 16px; padding: 40px 32px;
+      width: 340px; text-align: center;
+    }
+    .lock-box h1 { color: #f9fafb; font-size: 1.4rem; margin-bottom: 6px; }
+    .lock-box p { color: #9ca3af; font-size: 0.85rem; margin-bottom: 28px; }
+    .lock-box input {
+      width: 100%; padding: 12px 14px; background: #374151; border: 1px solid #4b5563;
+      border-radius: 8px; color: #f9fafb; font-size: 1rem; margin-bottom: 12px; outline: none;
+      transition: border-color 0.15s;
+    }
+    .lock-box input:focus { border-color: #b45309; }
+    .lock-box button {
+      width: 100%; padding: 12px; background: #b45309; color: #fff; border: none;
+      border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    }
+    .lock-box button:hover { background: #92400e; }
+    .lock-error { color: #f87171; font-size: 0.82rem; margin-top: 8px; display: none; }
+
+    /* App shell */
+    #admin-app { display: none; }
+    .top-bar {
+      background: #111827; color: #f9fafb; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .top-bar h1 { font-size: 1.1rem; font-weight: 700; }
+    .top-bar span { font-size: 0.75rem; color: #9ca3af; margin-left: 8px; }
+    .save-bar {
+      background: #fef3c7; border-bottom: 2px solid #fbbf24;
+      padding: 10px 24px; display: none; align-items: center; gap: 12px;
+      position: sticky; top: 57px; z-index: 9;
+    }
+    .save-bar.visible { display: flex; }
+    .save-bar p { flex: 1; font-size: 0.85rem; font-weight: 500; color: #92400e; }
+    .btn-save {
+      background: #b45309; color: #fff; border: none; padding: 8px 20px;
+      border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem;
+    }
+    .btn-save:hover { background: #92400e; }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-discard {
+      background: none; border: 1px solid #d97706; color: #b45309; padding: 8px 16px;
+      border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem;
+    }
+
+    .main { max-width: 760px; margin: 0 auto; padding: 24px 16px; }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .section-header h2 { font-size: 1.05rem; font-weight: 700; }
+    .btn-add {
+      background: #111827; color: #fff; border: none; padding: 9px 18px;
+      border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-add:hover { background: #374151; }
+
+    /* Stop cards */
+    .stops-list { display: flex; flex-direction: column; gap: 8px; }
+    .stop-card {
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .stop-card-num {
+      width: 28px; height: 28px; background: #f3f4f6; border-radius: 50%;
+      font-size: 0.78rem; font-weight: 700; color: #6b7280;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .stop-card-info { flex: 1; min-width: 0; }
+    .stop-card-title { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stop-card-meta { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+    .stop-card-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-icon {
+      width: 32px; height: 32px; border: 1px solid #e5e7eb; background: #fff;
+      border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #6b7280; transition: all 0.12s;
+    }
+    .btn-icon:hover { background: #f3f4f6; color: #111827; }
+    .btn-icon.btn-danger:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+    .btn-icon:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* Form modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 24px 16px; z-index: 100; overflow-y: auto;
+    }
+    .modal {
+      background: #fff; border-radius: 16px; width: 100%; max-width: 520px;
+      overflow: hidden; margin: auto;
+    }
+    .modal-header {
+      padding: 18px 20px; border-bottom: 1px solid #e5e7eb;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; }
+    .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .modal-footer {
+      padding: 16px 20px; border-top: 1px solid #e5e7eb;
+      display: flex; gap: 10px; justify-content: flex-end;
+    }
+
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 5px; }
+    .hint { font-size: 0.72rem; color: #9ca3af; font-weight: 400; margin-left: 4px; }
+    input[type="text"], input[type="number"], input[type="date"], textarea, select {
+      width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px;
+      font-size: 0.9rem; font-family: inherit; outline: none; background: #fff; color: #111827;
+      transition: border-color 0.15s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #b45309; box-shadow: 0 0 0 3px rgba(180,83,9,0.1); }
+    textarea { min-height: 90px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .photo-list { display: flex; flex-direction: column; gap: 8px; }
+    .photo-row {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .photo-row input { flex: 1; }
+    .btn-remove-photo {
+      flex-shrink: 0; width: 32px; height: 32px; background: #fee2e2;
+      border: none; border-radius: 8px; color: #dc2626; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-add-photo {
+      font-size: 0.8rem; color: #b45309; font-weight: 600; background: none;
+      border: 1px dashed #d97706; border-radius: 8px; padding: 8px 12px;
+      cursor: pointer; width: 100%; text-align: left;
+    }
+    .btn-add-photo:hover { background: #fef3c7; }
+
+    .btn-primary {
+      background: #111827; color: #fff; border: none; padding: 10px 22px;
+      border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+    }
+    .btn-primary:hover { background: #374151; }
+    .btn-secondary {
+      background: #fff; color: #374151; border: 1px solid #d1d5db; padding: 10px 22px;
+      border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer;
+    }
+    .btn-secondary:hover { background: #f9fafb; }
+
+    .status-toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #111827; color: #fff; padding: 12px 20px; border-radius: 12px;
+      font-size: 0.85rem; font-weight: 500; z-index: 999; opacity: 0;
+      transition: opacity 0.2s; pointer-events: none;
+    }
+    .status-toast.show { opacity: 1; }
+    .status-toast.error { background: #dc2626; }
+    .status-toast.success { background: #16a34a; }
+
+    .config-note {
+      background: #fef3c7; border: 1px solid #fbbf24; border-radius: 10px;
+      padding: 14px 16px; font-size: 0.8rem; color: #92400e; margin-bottom: 20px;
+      display: none;
+    }
+    .config-note.visible { display: block; }
+    .config-note code { background: #fde68a; border-radius: 4px; padding: 1px 5px; font-family: monospace; }
+
+    .empty-list {
+      text-align: center; padding: 48px 24px; color: #9ca3af;
+      background: #fff; border-radius: 12px; border: 1px dashed #e5e7eb;
+    }
+    .empty-list p { font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<!-- ── Lock screen ──────────────────────────────────────────────────────────── -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <h1>Scanjourney</h1>
+    <p>Admin access only</p>
+    <input type="password" id="pwd-input" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()" />
+    <button onclick="unlock()">Unlock</button>
+    <div class="lock-error" id="lock-error">Incorrect password</div>
+    <div id="hash-helper" style="display:none;margin-top:20px;text-align:left;background:#111827;border-radius:10px;padding:14px;">
+      <p style="color:#9ca3af;font-size:0.75rem;margin-bottom:8px;">Copy this hash into <code style="color:#fbbf24">ADMIN_PASSWORD_HASH</code> in the file, then re-upload:</p>
+      <code id="hash-output" style="display:block;color:#34d399;font-size:0.7rem;word-break:break-all;line-height:1.6;"></code>
+    </div>
+  </div>
+</div>
+
+<!-- ── Admin app ────────────────────────────────────────────────────────────── -->
+<div id="admin-app">
+  <div class="top-bar">
+    <div>
+      <h1>Scanjourney Admin</h1>
+      <span id="stop-count"></span>
+    </div>
+    <a href="index.html" style="color:#9ca3af;font-size:0.8rem;text-decoration:none;">← View site</a>
+  </div>
+
+  <div class="save-bar" id="save-bar">
+    <p>You have unsaved changes</p>
+    <button class="btn-discard" onclick="discardChanges()">Discard</button>
+    <button class="btn-save" id="btn-save-github" onclick="saveToGitHub()">Save to GitHub</button>
+  </div>
+
+  <div class="main">
+    <div class="config-note" id="config-note">
+      <strong>Setup required:</strong> Open this file and fill in <code>ADMIN_PASSWORD_HASH</code> and <code>NETLIFY_FUNCTION_URL</code> at the top of the script section before using this page.
+    </div>
+
+    <div class="section-header">
+      <h2 id="list-heading">Stops</h2>
+      <button class="btn-add" onclick="openForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add stop
+      </button>
+    </div>
+
+    <div class="stops-list" id="stops-list"></div>
+  </div>
+</div>
+
+<!-- ── Form modal ───────────────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modal" style="display:none;" onclick="if(event.target===this)closeForm()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Add stop</h3>
+      <button class="btn-icon" onclick="closeForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label>Title <span class="hint">e.g. Vienna, Austria</span></label>
+        <input type="text" id="f-title" placeholder="City, Country" />
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Date visited</label>
+          <input type="date" id="f-date" />
+        </div>
+        <div>
+          <label>Country</label>
+          <input type="text" id="f-country" placeholder="e.g. Austria" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label>Latitude <span class="hint">from Google Maps</span></label>
+          <input type="number" id="f-lat" placeholder="e.g. 48.2082" step="any" />
+        </div>
+        <div>
+          <label>Longitude</label>
+          <input type="number" id="f-lng" placeholder="e.g. 16.3738" step="any" />
+        </div>
+      </div>
+      <div>
+        <label>Distance from previous stop <span class="hint">km, optional</span></label>
+        <input type="number" id="f-dist" placeholder="e.g. 340" min="0" />
+      </div>
+      <div>
+        <label>Notes</label>
+        <textarea id="f-notes" placeholder="What happened here…"></textarea>
+      </div>
+      <div>
+        <label>Photos <span class="hint">paste image URLs, or relative paths like photos/rome.jpg</span></label>
+        <div class="photo-list" id="photo-list"></div>
+        <button class="btn-add-photo" onclick="addPhotoRow()">+ Add photo URL</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeForm()">Cancel</button>
+      <button class="btn-primary" onclick="saveStop()">Save stop</button>
+    </div>
+  </div>
+</div>
+
+<div class="status-toast" id="toast"></div>
+
+<script>
+// ── CONFIG — fill these in before uploading ───────────────────────────────────
+const ADMIN_PASSWORD_HASH = 'YOUR_PASSWORD_HASH_HERE'; // SHA-256 hash — see setup instructions
+const NETLIFY_FUNCTION_URL = 'https://mellifluous-kleicha-23c2a0.netlify.app/.netlify/functions/save-stops'; // e.g. https://xxx.netlify.app/.netlify/functions/save-stops
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+let unlockedPassword = null; // held in memory only, never in source
+
+async function unlock() {
+  const val = document.getElementById('pwd-input').value;
+  if (!val) return;
+
+  // First-time setup: if hash not configured, show the hash for the typed password
+  if (ADMIN_PASSWORD_HASH === 'YOUR_PASSWORD_HASH_HERE') {
+    const hash = await sha256(val);
+    document.getElementById('hash-output').textContent = hash;
+    document.getElementById('hash-helper').style.display = 'block';
+    return;
+  }
+
+  const hash = await sha256(val);
+  if (hash === ADMIN_PASSWORD_HASH) {
+    unlockedPassword = val; // store in memory to send to server on save
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('lock-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let waypoints = [];
+let dirty = false;
+let editingId = null;
+
+function markDirty() {
+  dirty = true;
+  document.getElementById('save-bar').classList.add('visible');
+}
+function clearDirty() {
+  dirty = false;
+  document.getElementById('save-bar').classList.remove('visible');
+}
+
+function discardChanges() {
+  if (!confirm('Discard all unsaved changes?')) return;
+  init();
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  const needsConfig = NETLIFY_FUNCTION_URL === 'YOUR_NETLIFY_FUNCTION_URL';
+  document.getElementById('config-note').classList.toggle('visible', needsConfig);
+
+  // data.json is public on GitHub Pages — just fetch it directly
+  try {
+    const res = await fetch('data.json');
+    waypoints = await res.json();
+  } catch (e) {
+    waypoints = [];
+  }
+
+  clearDirty();
+  renderList();
+}
+
+// ── Save via Netlify function ─────────────────────────────────────────────────
+async function saveToGitHub() {
+  const btn = document.getElementById('btn-save-github');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch(NETLIFY_FUNCTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: unlockedPassword, waypoints }),
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || res.status);
+
+    clearDirty();
+    toast('Saved ✓ — site will update in ~30 seconds', 'success');
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save to GitHub';
+  }
+}
+
+// ── List ──────────────────────────────────────────────────────────────────────
+function renderList() {
+  document.getElementById('stop-count').textContent = `${waypoints.length} stop${waypoints.length !== 1 ? 's' : ''}`;
+  document.getElementById('list-heading').textContent = `Stops (${waypoints.length})`;
+
+  const el = document.getElementById('stops-list');
+
+  if (waypoints.length === 0) {
+    el.innerHTML = `<div class="empty-list"><p>No stops yet. Add your first stop above.</p></div>`;
+    return;
+  }
+
+  el.innerHTML = waypoints.map((w, i) => {
+    const date = new Date(w.visitedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const meta = [w.country, date, w.distanceFromPrevKm ? '+' + w.distanceFromPrevKm + ' km' : null].filter(Boolean).join(' · ');
+    return `
+      <div class="stop-card" id="card-${w.id}">
+        <div class="stop-card-num">${i + 1}</div>
+        <div class="stop-card-info">
+          <div class="stop-card-title">${w.title}</div>
+          <div class="stop-card-meta">${meta}</div>
+        </div>
+        <div class="stop-card-actions">
+          <button class="btn-icon" title="Move up" onclick="moveStop(${w.id}, -1)" ${i === 0 ? 'disabled' : ''}>
+            ${iconUp()}
+          </button>
+          <button class="btn-icon" title="Move down" onclick="moveStop(${w.id}, 1)" ${i === waypoints.length - 1 ? 'disabled' : ''}>
+            ${iconDown()}
+          </button>
+          <button class="btn-icon" title="Edit" onclick="openForm(${w.id})">
+            ${iconEdit()}
+          </button>
+          <button class="btn-icon btn-danger" title="Delete" onclick="deleteStop(${w.id})">
+            ${iconTrash()}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── Move ──────────────────────────────────────────────────────────────────────
+function moveStop(id, dir) {
+  const i = waypoints.findIndex(w => w.id === id);
+  if (i < 0) return;
+  const j = i + dir;
+  if (j < 0 || j >= waypoints.length) return;
+  [waypoints[i], waypoints[j]] = [waypoints[j], waypoints[i]];
+  markDirty();
+  renderList();
+}
+
+// ── Delete ────────────────────────────────────────────────────────────────────
+function deleteStop(id) {
+  const w = waypoints.find(x => x.id === id);
+  if (!w) return;
+  if (!confirm(`Delete "${w.title}"? This cannot be undone until you save.`)) return;
+  waypoints = waypoints.filter(x => x.id !== id);
+  markDirty();
+  renderList();
+}
+
+// ── Form ──────────────────────────────────────────────────────────────────────
+function openForm(id) {
+  editingId = id ?? null;
+  document.getElementById('modal-title').textContent = id ? 'Edit stop' : 'Add stop';
+  document.getElementById('modal').style.display = 'flex';
+
+  if (id) {
+    const w = waypoints.find(x => x.id === id);
+    if (!w) return;
+    document.getElementById('f-title').value = w.title ?? '';
+    document.getElementById('f-date').value = w.visitedAt ? w.visitedAt.slice(0, 10) : '';
+    document.getElementById('f-country').value = w.country ?? '';
+    document.getElementById('f-lat').value = w.lat ?? '';
+    document.getElementById('f-lng').value = w.lng ?? '';
+    document.getElementById('f-dist').value = w.distanceFromPrevKm ?? '';
+    document.getElementById('f-notes').value = w.description ?? '';
+    renderPhotoRows((w.photos ?? []).map(p => ({ url: p.url, caption: p.caption ?? '' })));
+  } else {
+    document.getElementById('f-title').value = '';
+    document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('f-country').value = '';
+    document.getElementById('f-lat').value = '';
+    document.getElementById('f-lng').value = '';
+    document.getElementById('f-dist').value = '';
+    document.getElementById('f-notes').value = '';
+    renderPhotoRows([]);
+  }
+  document.getElementById('f-title').focus();
+}
+
+function closeForm() {
+  document.getElementById('modal').style.display = 'none';
+  editingId = null;
+}
+
+function renderPhotoRows(photos) {
+  const list = document.getElementById('photo-list');
+  list.innerHTML = '';
+  (photos || []).forEach(p => addPhotoRow(p.url, p.caption));
+}
+
+function addPhotoRow(url = '', caption = '') {
+  const list = document.getElementById('photo-list');
+  const row = document.createElement('div');
+  row.className = 'photo-row';
+  row.innerHTML = `
+    <input type="text" placeholder="https://… or photos/image.jpg" value="${escAttr(url)}" />
+    <button class="btn-remove-photo" onclick="this.parentElement.remove()" title="Remove">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  list.appendChild(row);
+}
+
+function getPhotoRows() {
+  return [...document.querySelectorAll('#photo-list .photo-row input')]
+    .map(inp => inp.value.trim())
+    .filter(Boolean)
+    .map(url => ({ url }));
+}
+
+function saveStop() {
+  const title = document.getElementById('f-title').value.trim();
+  const dateVal = document.getElementById('f-date').value;
+  const lat = parseFloat(document.getElementById('f-lat').value);
+  const lng = parseFloat(document.getElementById('f-lng').value);
+
+  if (!title) { alert('Please enter a title.'); return; }
+  if (!dateVal) { alert('Please pick a date.'); return; }
+  if (isNaN(lat) || isNaN(lng)) { alert('Please enter valid latitude and longitude.'); return; }
+
+  const stop = {
+    id: editingId ?? Date.now(),
+    title,
+    visitedAt: new Date(dateVal).toISOString(),
+    country: document.getElementById('f-country').value.trim() || null,
+    lat,
+    lng,
+    distanceFromPrevKm: document.getElementById('f-dist').value ? Number(document.getElementById('f-dist').value) : null,
+    description: document.getElementById('f-notes').value.trim() || null,
+    photos: getPhotoRows(),
+  };
+
+  if (editingId) {
+    const i = waypoints.findIndex(w => w.id === editingId);
+    if (i >= 0) waypoints[i] = stop;
+  } else {
+    waypoints.push(stop);
+  }
+
+  closeForm();
+  markDirty();
+  renderList();
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'status-toast show ' + type;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── SVG icons ─────────────────────────────────────────────────────────────────
+const svg = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px">${d}</svg>`;
+const iconUp    = () => svg('<polyline points="18 15 12 9 6 15"/>');
+const iconDown  = () => svg('<polyline points="6 9 12 15 18 9"/>');
+const iconEdit  = () => svg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>');
+const iconTrash = () => svg('<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>');
+
+const escAttr = s => (s || '').replace(/"/g, '&quot;');
+</script>
+</body>
+</html>
