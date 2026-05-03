@@ -346,7 +346,7 @@ function initChart() {
         }
       },
       scales: {
-        x: { type: 'time', time: { unit: 'day' }, grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
+        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
         y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 }, callback: v => v + ' km' }, border: { display: false } }
       }
     }
@@ -361,6 +361,7 @@ function initPeriodChart(period) {
   if (periodChart) { periodChart.destroy(); periodChart = null; }
   const legs = waypoints.filter(w => w.distanceFromPrevKm > 0);
   const buckets = new Map();
+  const parseDay = (value) => new Date(`${value}T00:00:00`);
   legs.forEach(w => {
     const d = new Date(w.visitedAt);
     let key;
@@ -382,13 +383,22 @@ function initPeriodChart(period) {
     buckets.set(key, current);
   });
   const entries = [...buckets.values()].sort((a, b) => a.x - b.x);
+  const dayEntries = [];
+  if (period === 'day' && entries.length) {
+    const byDay = new Map(entries.map(e => [e.x.toISOString().slice(0, 10), e.value]));
+    const first = new Date(entries[0].x);
+    const last = new Date(entries[entries.length - 1].x);
+    for (let d = new Date(first); d <= last; d.setDate(d.getDate() + 1)) {
+      const key = d.toISOString().slice(0, 10);
+      dayEntries.push({ label: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }), value: byDay.get(key) ?? 0 });
+    }
+  }
   periodChart = new Chart(canvas, {
     type: 'line',
     data: {
+      labels: period === 'day' ? dayEntries.map(p => p.label) : entries.map(p => p.label),
       datasets: [{
-        data: period === 'day'
-          ? entries.map(p => ({ x: p.x, y: p.value }))
-          : entries.map(p => ({ x: p.label, y: p.value })),
+        data: period === 'day' ? dayEntries.map(p => p.value) : entries.map(p => p.value),
         borderColor: '#d97706',
         borderWidth: 2,
         pointBackgroundColor: '#d97706',
@@ -416,9 +426,7 @@ function initPeriodChart(period) {
         }
       },
       scales: {
-        x: period === 'day'
-          ? { type: 'time', time: { unit: 'day' }, grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } }
-          : { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
+        x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 10 }, maxRotation: 35 }, border: { display: false } },
         y: { grid: { color: '#f3f4f6' }, ticks: { color: '#9ca3af', font: { size: 10 }, callback: v => v + ' km' }, border: { display: false } }
       }
     }
