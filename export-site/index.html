@@ -221,6 +221,37 @@ function renderStats() {
       <div class="stat-label">${label}</div>
     </div>`;
 
+  // Distance-per-leg bar chart
+  const chartLegs = wps.filter(w => w.distanceFromPrevKm > 0);
+  const maxDist = Math.max(...chartLegs.map(w => w.distanceFromPrevKm), 1);
+  const barH = 80;
+  const barW = 28;
+  const gap = 10;
+  const chartW = chartLegs.length * (barW + gap);
+
+  const chart = chartLegs.length > 1 ? `
+    <div class="chart-section">
+      <p class="chart-label">Distance per leg (km)</p>
+      <div class="chart-scroll">
+        <svg width="${chartW}" height="${barH + 36}" style="display:block;">
+          ${chartLegs.map((w, i) => {
+            const h = Math.max(4, Math.round((w.distanceFromPrevKm / maxDist) * barH));
+            const x = i * (barW + gap);
+            const y = barH - h;
+            const short = w.title.split(',')[0].slice(0, 8);
+            return `
+              <g>
+                <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="#b45309" opacity="0.85"/>
+                <text x="${x + barW / 2}" y="${y - 4}" text-anchor="middle" font-size="9" fill="#6b7280">${w.distanceFromPrevKm}</text>
+                <text x="${x + barW / 2}" y="${barH + 14}" text-anchor="middle" font-size="9" fill="#6b7280">${short}</text>
+              </g>`;
+          }).join('')}
+          <line x1="0" y1="${barH}" x2="${chartW}" y2="${barH}" stroke="#e5e7eb" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+  ` : '';
+
   const panel = document.getElementById('panel');
   panel.innerHTML = `
     <div class="panel-header">
@@ -236,6 +267,8 @@ function renderStats() {
         ${stat(iconImage(), totalPhotos, 'Photos')}
         ${stat(iconBar(), avgLeg ? avgLeg + ' km' : '', 'Avg leg')}
       </div>
+
+      ${chart}
 
       ${lastStop ? `
         <div style="margin: 0 16px 16px; background: var(--gray-50); border-radius: 12px; padding: 12px; border: 1px solid var(--gray-100);">
