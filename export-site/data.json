@@ -22,17 +22,6 @@
     "photos": []
   },
   {
-    "id": 2,
-    "title": "Dover, UK",
-    "description": "Made it to the coast! 130km in the legs. Watched the white cliffs glow in the afternoon sun before catching the ferry. France tomorrow.",
-    "lat": 51.1279,
-    "lng": 1.3134,
-    "country": "United Kingdom",
-    "distanceFromPrevKm": 130,
-    "visitedAt": "2024-03-16T17:30:00.000Z",
-    "photos": []
-  },
-  {
     "id": 4,
     "title": "Lyon, France",
     "description": "The Rhône valley opened up beautifully today. Long descents through vineyards, warmth in the air. Lyon is stunning — old stone and the two rivers meeting.",
@@ -41,6 +30,17 @@
     "country": "France",
     "distanceFromPrevKm": 460,
     "visitedAt": "2024-03-27T16:00:00.000Z",
+    "photos": []
+  },
+  {
+    "id": 2,
+    "title": "Dover, UK",
+    "description": "Made it to the coast! 130km in the legs. Watched the white cliffs glow in the afternoon sun before catching the ferry. France tomorrow.",
+    "lat": 51.1279,
+    "lng": 1.3134,
+    "country": "United Kingdom",
+    "distanceFromPrevKm": 130,
+    "visitedAt": "2024-03-16T17:30:00.000Z",
     "photos": []
   },
   {
