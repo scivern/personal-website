@@ -141,6 +141,7 @@ html, body { height: 100%; font-family: var(--sans); background: #f0ebe3; color:
 .no-content { font-size: 0.875rem; color: var(--gray-400); font-style: italic; margin-top: 12px; }
 
 /* ── Stats panel ── */
+.panel-body { max-height: 100%; overflow-y: auto; }
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
 .stat-card { background: var(--amber-bg); border-radius: 12px; padding: 12px; }
 .stat-icon { color: var(--amber); margin-bottom: 6px; }
@@ -150,11 +151,6 @@ html, body { height: 100%; font-family: var(--sans); background: #f0ebe3; color:
 .chart-section { margin: 0 16px 16px; background: var(--gray-50); border-radius: 12px; padding: 14px; border: 1px solid var(--gray-100); }
 .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .chart-label { font-family: var(--sans); font-size: 0.75rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
-.period-toggle { display: flex; border: 1px solid var(--gray-200); border-radius: 8px; overflow: hidden; background: #fff; }
-.period-btn { background: none; border: none; border-right: 1px solid var(--gray-200); padding: 5px 11px; font-size: 0.75rem; font-weight: 500; color: var(--gray-500); cursor: pointer; font-family: var(--sans); line-height: 1; }
-.period-btn:last-child { border-right: none; }
-.period-btn:hover { background: var(--gray-100); }
-.period-btn.active { background: #f59e0b; color: #fff; }
 .chart-canvas-wrap { position: relative; height: 160px; }
 .leg-bars { display: flex; flex-direction: column; gap: 10px; }
 .leg-meta { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--sans); font-size: 0.78rem; color: var(--gray-600); margin-bottom: 4px; }
