@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "title": "London, UK",
+    "description": "Day 1 — The journey begins! Rolled out of London on a crisp morning, heart hammering with excitement and nerves. The city slowly gave way to the Surrey Hills. Everything felt surreal.",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "country": "United Kingdom",
+    "distanceFromPrevKm": null,
+    "visitedAt": "2024-03-15T08:00:00.000Z",
+    "photos": []
+  },
+  {
+    "id": 2,
+    "title": "Dover, UK",
+    "description": "Made it to the coast! 130km in the legs. Watched the white cliffs glow in the afternoon sun before catching the ferry. France tomorrow.",
+    "lat": 51.1279,
+    "lng": 1.3134,
+    "country": "United Kingdom",
+    "distanceFromPrevKm": 130,
+    "visitedAt": "2024-03-16T17:30:00.000Z",
+    "photos": []
+  },
+  {
+    "id": 3,
+    "title": "Paris, France",
+    "description": "Cycled through the French countryside and arrived in Paris in the evening. The Eiffel Tower lit up at night as I rolled into the city. Croissants for dinner — absolutely earned.",
+    "lat": 48.8566,
+    "lng": 2.3522,
+    "country": "France",
+    "distanceFromPrevKm": 395,
+    "visitedAt": "2024-03-20T19:00:00.000Z",
+    "photos": []
+  },
+  {
+    "id": 4,
+    "title": "Lyon, France",
+    "description": "The Rhône valley opened up beautifully today. Long descents through vineyards, warmth in the air. Lyon is stunning — old stone and the two rivers meeting.",
+    "lat": 45.764,
+    "lng": 4.8357,
+    "country": "France",
+    "distanceFromPrevKm": 460,
+    "visitedAt": "2024-03-27T16:00:00.000Z",
+    "photos": []
+  },
+  {
+    "id": 5,
+    "title": "Milan, Italy",
+    "description": "Crossed the Alps via Mont Cenis — brutal but breathtaking. The descent into Italy with snow-capped peaks behind me was one of the best moments of my life.",
+    "lat": 45.4642,
+    "lng": 9.19,
+    "country": "Italy",
+    "distanceFromPrevKm": 520,
+    "visitedAt": "2024-04-05T14:00:00.000Z",
+    "photos": []
+  }
+]

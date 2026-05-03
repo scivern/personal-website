@@ -1,72 +1,273 @@
-<!DOCTYPE HTML>
-
-<html lang="en-GB">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width" , initial-scale="1.0">
-    <title>George Scannell's Personal Website</title>
-    <link href="style.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/ddfda15c1c.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Scanjourney</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
+<body>
+<div id="app">
+  <div id="map"></div>
 
-<body class="standard-body">
+  <div id="title-badge"><h1>Scanjourney</h1></div>
 
-<header>
-<nav class="standard-nav">
-    <ul class="menu">
-        <li class="logo"><a href="index.html">George Scannell</a></li>
-        <li class="item"><a href="gallery.html">Gallery</a></li>
-        <li class="item has-submenu">
-            <a tabindex="0">Favourites</a>
-            <ul class="submenu">
-                <li class="subitem"><a href="music.html">Music</a></li>
-                <li class="subitem"><a href="filmsAndTV.html">Films/TV</a></li>
-            </ul>
-        </li>
-        <li class="item"><a href="media.html">Media</a></li>
-        <li class="item has-submenu">
-            <a tabindex="0">Projects</a>
-            <ul class="submenu">
-                <li class="subitem"><a href="spotifyStreamData.html">Spotify Stream Data</a></li>
-                <li class="subitem"><a href="spotifyUserData.html">Spotify User Data</a></li>
-                <li class="subitem"><a href="barnesHutSim.html">Barnes-Hut Simulation</a></li>
-            </ul>
-        </li>
-        <li class="toggle"><a href="#"><i class="fas fa-bars"></i></a></li>
-    </ul>
-</nav>
-</header>
+  <div id="controls">
+    <button class="fab" id="btn-stats" onclick="toggleStats()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>
+      <span>Stats</span>
+    </button>
+    <button class="fab" id="btn-stops" onclick="toggleList()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>All stops</span>
+    </button>
+  </div>
 
-<main class="landing-page-main">
-
-<h1>Physics Graduate <a target="_blank" style="color: inherit;"
-        href="https://www.linkedin.com/in/george-scannell-744354247/"><i class="fa-brands fa-linkedin fa-1x"></i></a>
-</h1>
-
-<div class="cv-diss-links">
-    <a href="files/George Scannell - CV.pdf">CV/Resume</a>
-    <a href="files\George_Scannell___BSc_Project__Double_Binary_as_a_Model_of_a_Double_Bar_(4).pdf">Dissertation</a>
+  <div id="panel">
+    <!-- content injected by JS -->
+  </div>
 </div>
 
-<div class="landing-page-profile">
-    <p1>Recipient of the William Lassell Award for attaining the highest Physics with Astronomy grade (86%) among my
-        graduating cohort
-    </p1>
-</div>
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+let waypoints = [];
 
+async function loadData() {
+  const res = await fetch('data.json');
+  waypoints = await res.json();
+  initMap();
+  renderPanel('closed');
+}
 
-</main>
+// ── Map ───────────────────────────────────────────────────────────────────────
+let map;
 
+function initMap() {
+  const positions = waypoints.map(w => [w.lat, w.lng]);
 
+  let bounds;
+  if (positions.length > 0) {
+    const lats = positions.map(p => p[0]);
+    const lngs = positions.map(p => p[1]);
+    bounds = [
+      [Math.min(...lats) - 0.5, Math.min(...lngs) - 0.5],
+      [Math.max(...lats) + 0.5, Math.max(...lngs) + 0.5],
+    ];
+  }
 
+  map = L.map('map', { zoomControl: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
 
+  if (bounds) {
+    map.fitBounds(bounds);
+  } else {
+    map.setView([20, 0], 3);
+  }
 
+  // Route line
+  if (positions.length > 1) {
+    L.polyline(positions, { color: '#b45309', weight: 3, dashArray: '6 6', opacity: 0.7 }).addTo(map);
+  }
 
+  // Markers
+  waypoints.forEach(w => {
+    const marker = L.marker([w.lat, w.lng]).addTo(map);
+    const date = new Date(w.visitedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    marker.bindPopup(`
+      <div>
+        <div class="popup-meta">${w.country ?? ''} · ${date}${w.distanceFromPrevKm ? ' · +' + w.distanceFromPrevKm + ' km' : ''}</div>
+        <div class="popup-title">${w.title}</div>
+        ${w.photos && w.photos.length > 0 ? `<img src="${w.photos[0].url}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-top:8px;" />` : ''}
+        ${w.description ? `<p style="font-size:0.78rem;color:#6b7280;margin-top:6px;line-height:1.5;">${truncate(w.description, 120)}</p>` : ''}
+        <button onclick="openDetail(${w.id})" style="margin-top:8px;font-size:0.78rem;color:#b45309;font-weight:600;background:none;border:none;cursor:pointer;padding:0;">View stop →</button>
+      </div>
+    `);
+  });
+}
 
+function truncate(str, n) {
+  return str.length > n ? str.slice(0, n) + '…' : str;
+}
 
+// ── Panel state ───────────────────────────────────────────────────────────────
+// view: 'closed' | 'list' | 'stats' | 'detail'
+let currentView = 'closed';
+let currentDetailId = null;
+
+function renderPanel(view, detailId) {
+  currentView = view;
+  currentDetailId = detailId ?? null;
+  const panel = document.getElementById('panel');
+  const btnStats = document.getElementById('btn-stats');
+  const btnStops = document.getElementById('btn-stops');
+
+  btnStats.classList.toggle('active', view === 'stats');
+  btnStops.classList.toggle('active', view === 'list' || view === 'detail');
+
+  if (view === 'closed') {
+    panel.classList.remove('open');
+    panel.innerHTML = '';
+    return;
+  }
+
+  panel.classList.add('open');
+
+  if (view === 'list') renderList();
+  else if (view === 'stats') renderStats();
+  else if (view === 'detail') renderDetail(detailId);
+}
+
+function closePanel() { renderPanel('closed'); }
+function toggleList() { renderPanel(currentView === 'list' || currentView === 'detail' ? 'closed' : 'list'); }
+function toggleStats() { renderPanel(currentView === 'stats' ? 'closed' : 'stats'); }
+function openDetail(id) { renderPanel('detail', id); }
+
+// ── List ──────────────────────────────────────────────────────────────────────
+function renderList() {
+  const panel = document.getElementById('panel');
+  panel.innerHTML = `
+    <div class="panel-header">
+      <h2>All stops (${waypoints.length})</h2>
+      <button class="close-btn" onclick="closePanel()">${iconX()}</button>
+    </div>
+    <div class="panel-body">
+      ${waypoints.length === 0
+        ? `<div class="empty-state">${iconMapPin()}<p>No stops yet.</p></div>`
+        : waypoints.map((w, i) => {
+            const date = new Date(w.visitedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            const meta = [w.country, date, w.distanceFromPrevKm ? '+' + w.distanceFromPrevKm + ' km' : null].filter(Boolean).join(' · ');
+            return `
+              <div class="stop-row" onclick="openDetail(${w.id})">
+                <div class="stop-num">${i + 1}</div>
+                <div class="stop-info">
+                  <div class="stop-title">${w.title}</div>
+                  <div class="stop-meta">${meta}</div>
+                </div>
+                <div class="stop-chevron">${iconChevron()}</div>
+              </div>`;
+          }).join('')
+      }
+    </div>
+  `;
+}
+
+// ── Detail ────────────────────────────────────────────────────────────────────
+function renderDetail(id) {
+  const w = waypoints.find(wp => wp.id === id);
+  if (!w) { renderPanel('list'); return; }
+  const date = new Date(w.visitedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const photos = w.photos ?? [];
+
+  const panel = document.getElementById('panel');
+  panel.innerHTML = `
+    <div class="panel-header">
+      <button class="back-btn" onclick="renderPanel('list')">${iconChevron()} All stops</button>
+      <button class="close-btn" onclick="closePanel()">${iconX()}</button>
+    </div>
+    <div class="panel-body">
+      ${photos.length > 0 ? `<img class="detail-hero" src="${photos[0].url}" alt="${w.title}" />` : ''}
+      <div class="detail-body">
+        <div class="detail-title">${w.title}</div>
+        <div class="detail-meta">
+          ${iconMapPin()}
+          <span>${w.country ?? 'Unknown'}</span>
+          <span class="detail-dot">·</span>
+          <span>${date}</span>
+          ${w.distanceFromPrevKm ? `<span class="detail-dot">·</span><span>+${w.distanceFromPrevKm} km</span>` : ''}
+        </div>
+
+        ${w.description ? `
+          <div class="detail-section-label">Notes</div>
+          <div class="detail-notes">${w.description}</div>
+        ` : ''}
+
+        ${photos.length > 1 ? `
+          <div class="detail-section-label">Photos</div>
+          <div class="photo-grid">
+            ${photos.map(p => `<img src="${p.url}" alt="${p.caption ?? w.title}" />`).join('')}
+          </div>
+        ` : ''}
+
+        ${!w.description && photos.length === 0 ? `<p class="no-content">No notes or photos yet.</p>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function renderStats() {
+  const wps = waypoints;
+  const totalKm = wps.reduce((s, w) => s + (w.distanceFromPrevKm ?? 0), 0);
+  const countries = [...new Set(wps.map(w => w.country).filter(Boolean))];
+  const totalPhotos = wps.reduce((s, w) => s + (w.photos?.length ?? 0), 0);
+  const dates = wps.map(w => new Date(w.visitedAt).getTime()).sort((a, b) => a - b);
+  const daysOnRoad = dates.length > 1 ? Math.round((dates[dates.length - 1] - dates[0]) / 86_400_000) : 0;
+  const legsWithDist = wps.filter(w => w.distanceFromPrevKm != null && w.distanceFromPrevKm > 0);
+  const avgLeg = legsWithDist.length ? Math.round(totalKm / legsWithDist.length) : 0;
+  const lastStop = wps[wps.length - 1];
+
+  const stat = (icon, value, label) => `
+    <div class="stat-card">
+      <div class="stat-icon">${icon}</div>
+      <div class="stat-value">${value || '—'}</div>
+      <div class="stat-label">${label}</div>
+    </div>`;
+
+  const panel = document.getElementById('panel');
+  panel.innerHTML = `
+    <div class="panel-header">
+      <h2>Scanjourney stats</h2>
+      <button class="close-btn" onclick="closePanel()">${iconX()}</button>
+    </div>
+    <div class="panel-body">
+      <div class="stats-grid">
+        ${stat(iconRoute(), totalKm ? totalKm.toLocaleString() + ' km' : '', 'Total distance')}
+        ${stat(iconMapPin(), wps.length, 'Stops logged')}
+        ${stat(iconFlag(), countries.length, 'Countries')}
+        ${stat(iconCalendar(), daysOnRoad ? daysOnRoad + ' days' : '', 'Days on road')}
+        ${stat(iconImage(), totalPhotos, 'Photos')}
+        ${stat(iconBar(), avgLeg ? avgLeg + ' km' : '', 'Avg leg')}
+      </div>
+
+      ${lastStop ? `
+        <div style="margin: 0 16px 16px; background: var(--gray-50); border-radius: 12px; padding: 12px; border: 1px solid var(--gray-100);">
+          <p style="font-size:0.72rem;font-weight:500;color:var(--gray-500);margin-bottom:2px;">Current / last stop</p>
+          <p style="font-weight:600;color:var(--gray-800);">${lastStop.title}</p>
+          <p style="font-size:0.75rem;color:var(--gray-400);margin-top:2px;">
+            ${lastStop.country ? lastStop.country + ' · ' : ''}${new Date(lastStop.visitedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </p>
+        </div>
+      ` : ''}
+
+      ${countries.length > 0 ? `
+        <div class="countries-section">
+          <p>Countries visited</p>
+          <div class="country-tags">
+            ${countries.map(c => `<span class="country-tag">${c}</span>`).join('')}
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ── SVG Icons ─────────────────────────────────────────────────────────────────
+const s = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;">${d}</svg>`;
+const iconX = () => s('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>');
+const iconMapPin = () => s('<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>');
+const iconChevron = () => s('<polyline points="9 18 15 12 9 6"/>');
+const iconRoute = () => s('<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>');
+const iconFlag = () => s('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>');
+const iconCalendar = () => s('<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>');
+const iconImage = () => s('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>');
+const iconBar = () => s('<rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/>');
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+loadData();
+</script>
 </body>
-
-<script src="script.js"></script>
-
 </html>
