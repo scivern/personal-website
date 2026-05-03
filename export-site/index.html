@@ -39,7 +39,7 @@
 let waypoints = [];
 
 async function loadData() {
-  const res = await fetch('data.json');
+  const res = await fetch('data.json?v=' + Date.now());
   waypoints = await res.json();
   initMap();
   renderPanel('closed');
