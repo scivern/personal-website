@@ -223,7 +223,7 @@
   <div class="save-bar" id="save-bar">
     <p>You have unsaved changes</p>
     <button class="btn-discard" onclick="discardChanges()">Discard</button>
-    <button class="btn-save" id="btn-save-github" onclick="saveToGitHub()">Save to GitHub</button>
+    <button class="btn-save" id="btn-save-github" onclick="saveToGitHub()">Save changes</button>
   </div>
 
   <div class="main">
@@ -365,7 +365,7 @@ async function init() {
 
   // data.json is public on GitHub Pages — just fetch it directly
   try {
-    const res = await fetch('data.json');
+    const res = await fetch('data.json?v=' + Date.now());
     waypoints = await res.json();
   } catch (e) {
     waypoints = [];
@@ -397,7 +397,7 @@ async function saveToGitHub() {
     toast('Save failed: ' + e.message, 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Save to GitHub';
+    btn.textContent = 'Save changes';
   }
 }
 
